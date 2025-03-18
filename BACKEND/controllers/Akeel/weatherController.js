@@ -1,28 +1,28 @@
 const axios = require("axios");
 
-// /** ✅ Get Location Autocomplete Suggestions */
-// exports.getLocationSuggestions = async (req, res) => {
-//   try {
-//     const { input } = req.query;
-//     if (!input) return res.status(400).json({ message: "Input is required" });
+/** ✅ Get Location Autocomplete Suggestions */
+exports.getLocationSuggestions = async (req, res) => {
+  try {
+    const { input } = req.query;
+    if (!input) return res.status(400).json({ message: "Input is required" });
 
-//     const apiKey = process.env.HERE_MAPS_API_KEY;
-//     const hereApiUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${input}&apiKey=${apiKey}`;
+    const apiKey = process.env.HERE_MAPS_API_KEY;
+    const hereApiUrl = `https://autocomplete.search.hereapi.com/v1/autocomplete?q=${input}&apiKey=${apiKey}`;
 
-//     const response = await axios.get(hereApiUrl);
-//     console.log("HERE API Response:", response.data);
+    const response = await axios.get(hereApiUrl);
+    console.log("HERE API Response:", response.data);
 
-//     const suggestions = response.data.items.map((place) => ({
-//       title: place.title, 
-//       location: place.address.city || place.address.label
-//     }));
+    const suggestions = response.data.items.map((place) => ({
+      title: place.title, 
+      location: place.address.city || place.address.label
+    }));
 
-//     res.json({ suggestions });
-//   } catch (error) {
-//     console.error("HERE Maps API Error:", error.message);
-//     res.status(500).json({ message: "Error fetching location suggestions", error: error.message });
-//   }
-// };
+    res.json({ suggestions });
+  } catch (error) {
+    console.error("HERE Maps API Error:", error.message);
+    res.status(500).json({ message: "Error fetching location suggestions", error: error.message });
+  }
+};
 
 /** ✅ Get 7-Day Weather Forecast */
 exports.getWeather = async (req, res) => {
