@@ -12,14 +12,45 @@ app.use(express.json());
 // Connect to Database
 connectDB();
 
+// Import Routes
+const profileRoutes = require("./routes/Akeel/profileRoutes"); 
+const weatherRoutes = require("./routes/Akeel/weatherRoutes"); 
+const authRoutes = require("./routes/Akeel/authRoutes"); 
+const guideRoutes = require("./routes/Akeel/guideRoutes"); 
 
-const profileRoutes = require("./routes/Akeel/profileRoutes"); // ✅ Import the profile routes
-
-// Routes
-app.use("/api/auth", require("./routes/Akeel/authRoutes")); // Ensure correct path
-app.use("/api/guides", require("./routes/Akeel/guideRoutes")); // Ensure correct path
-app.use("/api", profileRoutes); // ✅ Add profile routes
-
+// Use Routes
+app.use("/api/auth", authRoutes); 
+app.use("/api/guides", guideRoutes); 
+app.use("/api/profile", profileRoutes); 
+app.use("/api/weather", weatherRoutes);  // ✅ Ensuring the correct path for weather API
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
