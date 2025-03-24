@@ -1,4 +1,4 @@
-const Guide = require("../../models/Akeel/Guid");
+const Guide = require("../../models/Akeel/Guide");
 
 // Add a new guide (Admin Only)
 exports.addGuide = async (req, res) => {
@@ -14,7 +14,7 @@ exports.addGuide = async (req, res) => {
   }
 };
 
-// Get all guides (accessible to all authenticated users)
+// Get all guides
 exports.getGuides = async (req, res) => {
   try {
     const guides = await Guide.find().select("-reviews");
@@ -58,13 +58,14 @@ exports.deleteGuide = async (req, res) => {
   }
 };
 
-// Add a review (Users & Admins)
+// Add a review (Guests, Users, or Admins)
 exports.addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
     const guide = await Guide.findById(req.params.id);
     if (!guide) return res.status(404).json({ message: "Guide not found" });
 
+    // user can be null => name can be "Guest"
     const review = {
       user: req.user ? req.user.id : null,
       name: req.user ? req.user.name : "Guest",

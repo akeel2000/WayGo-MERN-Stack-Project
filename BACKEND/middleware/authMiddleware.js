@@ -23,8 +23,12 @@ const authMiddleware = (roles = []) => {
         return res.status(401).json({ message: "Token is no longer valid" });
       }
 
-      // 3) Attach user data
-      req.user = { id: user._id, role: user.role };
+      // 3) Attach user data, including the user's name
+      req.user = {
+        id: user._id,
+        role: user.role,
+        name: user.name, // <-- add this so you can use req.user.name
+      };
 
       // 4) Role check if needed
       if (roles.length > 0 && !roles.includes(user.role)) {
