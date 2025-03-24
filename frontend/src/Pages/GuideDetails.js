@@ -3,17 +3,14 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
 function GuideDetails() {
-  // 1) Get the "id" param from the URL
   const { id } = useParams();
 
-  // 2) Local state for the guide, its reviews, the review form, error messages, etc.
   const [guide, setGuide] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [reviewForm, setReviewForm] = useState({ rating: 1, comment: "" });
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  // 3) A function to fetch the guide details from the backend
   const fetchGuide = useCallback(async () => {
     try {
       const res = await fetch(`http://localhost:5000/api/guides/${id}`, {
@@ -28,7 +25,6 @@ function GuideDetails() {
     }
   }, [id]);
 
-  // 4) A function to fetch the guide's reviews from the backend
   const fetchReviews = useCallback(async () => {
     try {
       const res = await fetch(`http://localhost:5000/api/guides/${id}/reviews`, {
@@ -43,27 +39,23 @@ function GuideDetails() {
     }
   }, [id]);
 
-  // 5) On component mount (and when "id" changes), fetch the guide & reviews
   useEffect(() => {
     fetchGuide();
     fetchReviews();
   }, [fetchGuide, fetchReviews]);
 
-  // 6) Handle the review form submission
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await fetch(`http://localhost:5000/api/guides/${id}/reviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // optional if you want to send cookies
+        credentials: "include",
         body: JSON.stringify(reviewForm),
       });
       if (!res.ok) throw new Error("Failed to add review");
       setMessage("Review added successfully!");
-      // Reset the form
       setReviewForm({ rating: 1, comment: "" });
-      // Refresh the reviews list
       fetchReviews();
     } catch (err) {
       console.error(err);
@@ -71,13 +63,10 @@ function GuideDetails() {
     }
   };
 
-  // 7) Render the guide details, reviews, and review form
   return (
     <div className="p-4 max-w-3xl mx-auto">
-      {/* If there's an error, show it */}
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      {/* If guide data is loaded, show details */}
       {guide ? (
         <div>
           <h1 className="text-3xl font-bold mb-2">{guide.name}</h1>
@@ -123,17 +112,9 @@ function GuideDetails() {
           <form onSubmit={handleReviewSubmit} className="space-y-4">
             <div>
               <label className="block mb-1">Rating (1-5):</label>
-              <input
-                type="number"
-                name="rating"
+              <StarRatingInput
                 value={reviewForm.rating}
-                onChange={(e) =>
-                  setReviewForm({ ...reviewForm, rating: e.target.value })
-                }
-                min="1"
-                max="5"
-                className="border p-2 rounded w-full"
-                required
+                onChange={(val) => setReviewForm({ ...reviewForm, rating: val })}
               />
             </div>
             <div>
@@ -159,6 +140,30 @@ function GuideDetails() {
       ) : (
         <p>Loading guide details...</p>
       )}
+    </div>
+  );
+}
+
+/** A simple star-based rating input component. */
+function StarRatingInput({ value, onChange }) {
+  // "value" is the current rating (1..5)
+  // "onChange" is a callback that sets the new rating
+  const handleClick = (starValue) => {
+    onChange(starValue);
+  };
+
+  return (
+    <div className="flex items-center space-x-1 text-2xl text-yellow-400">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <button
+          key={star}
+          type="button"
+          className="focus:outline-none"
+          onClick={() => handleClick(star)}
+        >
+          {star <= value ? "★" : "☆"}
+        </button>
+      ))}
     </div>
   );
 }

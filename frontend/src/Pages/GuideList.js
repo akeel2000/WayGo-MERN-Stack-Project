@@ -2,6 +2,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+// A small helper to render a star rating with Unicode symbols.
+// We'll round the rating to the nearest integer for simplicity.
+function renderStars(rating) {
+  const rounded = Math.round(rating);
+  const maxStars = 5;
+  const stars = "★".repeat(rounded) + "☆".repeat(maxStars - rounded);
+  return <span className="text-yellow-400">{stars}</span>;
+}
+
 function GuideList() {
   const [guides, setGuides] = useState([]);
   const [error, setError] = useState("");
@@ -24,24 +33,55 @@ function GuideList() {
   }, []);
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Available Guides</h1>
-      {error && <p className="text-red-500">{error}</p>}
+    <div className="p-4 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-center">Available Guides</h1>
+      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+
       {guides.length === 0 ? (
-        <p>No guides found.</p>
+        <p className="text-center">No guides found.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        // We'll do a responsive grid with 1 column on small screens, up to 2 columns on md, 3 or 4 if you prefer.
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {guides.map((guide) => (
             <Link
               key={guide._id}
               to={`/guide/${guide._id}`}
-              className="block border p-4 rounded hover:shadow-lg transition-shadow"
+              className="block bg-white border border-gray-200 p-6 rounded-lg shadow hover:shadow-lg transition-shadow"
             >
-              <h2 className="text-xl font-bold mb-2">{guide.name}</h2>
-              <p>{guide.about.substring(0, 100)}...</p>
-              <p className="mt-2">
-                <strong>Rating:</strong> {guide.rating.toFixed(1)}
+              {/* Top row: Name + star rating */}
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-xl font-bold text-gray-800">
+                  {guide.name}
+                </h2>
+                <div className="ml-2 text-sm font-semibold">
+                  {renderStars(guide.rating)}
+                </div>
+              </div>
+
+              {/* Short "about" snippet */}
+              <p className="text-gray-600 mb-2">
+                {guide.about.substring(0, 100)}...
               </p>
+
+              {/* Extra info row: location, availability, numeric rating */}
+              <div className="text-sm text-gray-500 mt-3 space-y-1">
+                <p>
+                  <span className="font-medium">Location:</span>{" "}
+                  {guide.location}
+                </p>
+                <p>
+                  <span className="font-medium">Languages:</span>{" "}
+                  {guide.languages.join(", ")}
+                </p>
+                <p>
+                  <span className="font-medium">Available:</span>{" "}
+                  {guide.available ? "Yes" : "No"}
+                </p>
+                <p>
+                  <span className="font-medium">Numeric Rating:</span>{" "}
+                  {guide.rating.toFixed(1)}
+                </p>
+              </div>
             </Link>
           ))}
         </div>
