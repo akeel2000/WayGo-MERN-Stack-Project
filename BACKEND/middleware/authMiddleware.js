@@ -1,30 +1,37 @@
+// middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
+const User = require("../models/Akeel/User");
 
 const authMiddleware = (roles = []) => {
-  return (req, res, next) => {
-    const authHeader = req.headers.authorization;
-    
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  return async (req, res, next) => {
+    // Instead of reading from Authorization header, read from cookie
+    const token = req.cookies?.token;
+    if (!token) {
       return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
 
     try {
-      const token = authHeader.split(" ")[1]; // Extract token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify token
+      // 1) Verify the token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.user = decoded; // Attach user data to request
-
-      // If no specific roles are required, allow all authenticated users
-      if (roles.length === 0) {
-        return next();
+      // 2) Check if token in DB matches the one provided
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        return res.status(401).json({ message: "User not found" });
+      }
+      if (user.token !== token) {
+        return res.status(401).json({ message: "Token is no longer valid" });
       }
 
-      // Check if user has the required role
-      if (!roles.includes(req.user.role)) {
-        return res.status(403).json({ message: "Access Denied: Insufficient permissions" });
+      // 3) Attach user data
+      req.user = { id: user._id, role: user.role };
+
+      // 4) Role check if needed
+      if (roles.length > 0 && !roles.includes(user.role)) {
+        return res.status(403).json({ message: "Insufficient permissions" });
       }
 
-      next(); // Proceed if authorized
+      next();
     } catch (error) {
       return res.status(403).json({ message: "Invalid or expired token" });
     }

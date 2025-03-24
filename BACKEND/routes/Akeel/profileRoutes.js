@@ -1,11 +1,12 @@
+
 const express = require("express");
+const router = express.Router();
 const authMiddleware = require("../../middleware/authMiddleware");
 
-const router = express.Router();
-
-// Protected Profile Route (Only for Logged-in Users)
+// Any authenticated user can access
 router.get("/profile", authMiddleware(), (req, res) => {
-  res.json({ message: "Welcome to your profile", user: req.user });
+  return res.json({ message: `Welcome user ${req.user.id}`, role: req.user.role });
 });
 
+// ...
 module.exports = router;
