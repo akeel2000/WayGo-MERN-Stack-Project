@@ -58,20 +58,22 @@ exports.deleteGuide = async (req, res) => {
   }
 };
 
-// Add a review (Guests, Users, or Admins)
+
+
+// Add a review (Users, Admins, or Guests)
 exports.addReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
     const guide = await Guide.findById(req.params.id);
     if (!guide) return res.status(404).json({ message: "Guide not found" });
 
-    // user can be null => name can be "Guest"
     const review = {
       user: req.user ? req.user.id : null,
       name: req.user ? req.user.name : "Guest",
       rating: Number(rating),
       comment
     };
+    
 
     guide.reviews.push(review);
     // Calculate new average rating
@@ -84,6 +86,7 @@ exports.addReview = async (req, res) => {
     res.status(500).json({ message: "Failed to add review", error: error.message });
   }
 };
+
 
 // Get reviews for a guide
 exports.getReviews = async (req, res) => {

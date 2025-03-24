@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ReviewSchema = new mongoose.Schema(
   {
-    // Removed "required: true" from user to allow null
+    // Remove "required: true" to allow null values for guest reviews.
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     name: { type: String, required: true },
     rating: { type: Number, required: true, min: 1, max: 5 },
