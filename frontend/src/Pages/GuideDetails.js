@@ -111,7 +111,7 @@ function GuideDetails() {
   };
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
+    <div className=" pt-24 p-4 max-w-4xl mx-auto">
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       {guide ? (
