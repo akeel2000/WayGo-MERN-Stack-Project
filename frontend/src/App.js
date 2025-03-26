@@ -23,11 +23,12 @@ function App() {
       <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
       <Route path="/login" element={<PublicLayout><LoginForm /></PublicLayout>} />
       <Route path="/signup" element={<PublicLayout><SignUpForm /></PublicLayout>} />
-      <Route path="/services/guide" element={<GuideList />} />
+      <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
+
 
       {/* Protected Routes for Users */}
       <Route path="/user-dashboard" element={<ProtectedRoute><PublicLayout><UserDashboard /></PublicLayout></ProtectedRoute>} />
-      <Route path="/guides" element={<PublicLayout><GuideList /></PublicLayout>} />
+
       <Route path="/guide/:id" element={<PublicLayout><GuideDetails /></PublicLayout>} />
 
       {/* Protected Routes for Admin */}
