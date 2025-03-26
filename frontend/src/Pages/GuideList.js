@@ -33,60 +33,53 @@ function GuideList() {
   }, []);
 
   return (
-    <div className="p-4 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center">Available Guides</h1>
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+    <div className="pt-24 p-4 max-w-6xl mx-auto">
+  <h1 className="text-3xl font-bold mb-6 text-center">Available Guides</h1>
+  {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
-      {guides.length === 0 ? (
-        <p className="text-center">No guides found.</p>
-      ) : (
-        // We'll do a responsive grid with 1 column on small screens, up to 2 columns on md, 3 or 4 if you prefer.
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {guides.map((guide) => (
-            <Link
-              key={guide._id}
-              to={`/guide/${guide._id}`}
-              className="block bg-white border border-gray-200 p-6 rounded-lg shadow hover:shadow-lg transition-shadow"
-            >
-              {/* Top row: Name + star rating */}
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-xl font-bold text-gray-800">
-                  {guide.name}
-                </h2>
-                <div className="ml-2 text-sm font-semibold">
-                  {renderStars(guide.rating)}
-                </div>
-              </div>
+  {guides.length === 0 ? (
+    <p className="text-center">No guides found.</p>
+  ) : (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {guides.map((guide) => (
+        <Link
+          key={guide._id}
+          to={`/guide/${guide._id}`}
+          className="block bg-white border border-gray-200 p-6 rounded-lg shadow hover:shadow-lg transition-shadow"
+        >
+          <div className="flex items-center justify-between mb-2">
+            <h2 className="text-xl font-bold text-gray-800">
+              {guide.name}
+            </h2>
+            <div className="ml-2 text-sm font-semibold">
+              {renderStars(guide.rating)}
+            </div>
+          </div>
 
-              {/* Short "about" snippet */}
-              <p className="text-gray-600 mb-2">
-                {guide.about.substring(0, 100)}...
-              </p>
+          <p className="text-gray-600 mb-2">
+            {guide.about.substring(0, 100)}...
+          </p>
 
-              {/* Extra info row: location, availability, numeric rating */}
-              <div className="text-sm text-gray-500 mt-3 space-y-1">
-                <p>
-                  <span className="font-medium">Location:</span>{" "}
-                  {guide.location}
-                </p>
-                <p>
-                  <span className="font-medium">Languages:</span>{" "}
-                  {guide.languages.join(", ")}
-                </p>
-                <p>
-                  <span className="font-medium">Available:</span>{" "}
-                  {guide.available ? "Yes" : "No"}
-                </p>
-                <p>
-                  <span className="font-medium">Numeric Rating:</span>{" "}
-                  {guide.rating.toFixed(1)}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      )}
+          <div className="text-sm text-gray-500 mt-3 space-y-1">
+            <p>
+              <span className="font-medium">Location:</span> {guide.location}
+            </p>
+            <p>
+              <span className="font-medium">Languages:</span> {guide.languages.join(", ")}
+            </p>
+            <p>
+              <span className="font-medium">Available:</span> {guide.available ? "Yes" : "No"}
+            </p>
+            <p>
+              <span className="font-medium">Numeric Rating:</span> {guide.rating.toFixed(1)}
+            </p>
+          </div>
+        </Link>
+      ))}
     </div>
+  )}
+</div>
+
   );
 }
 

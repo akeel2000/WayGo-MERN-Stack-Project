@@ -5,37 +5,44 @@ import { useNavigate } from "react-router-dom";
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
     try {
       const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // ensures cookies are sent
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
       if (response.ok) {
-        // Navigate based on role (this example reloads the page to update header)
+        // Navigate based on the user's role
         if (data.role === "admin") {
           navigate("/admin-dashboard");
         } else {
           navigate("/user-dashboard");
         }
-        window.location.reload();
+        // Optionally, if your header needs to refresh, consider a state management solution
+        // rather than reloading the entire window.
       } else {
-        alert(data.message || "Login failed");
+        setError(data.message || "Login failed");
       }
     } catch (err) {
       console.error(err);
-      alert("An error occurred");
+      setError("An error occurred");
     }
+    setLoading(false);
   };
 
   return (
     <form className="flex flex-col space-y-4" onSubmit={handleLogin}>
+      {error && <div className="text-red-500">{error}</div>}
       <input
         type="email"
         placeholder="Email"
@@ -54,9 +61,12 @@ function LoginForm() {
       />
       <button
         type="submit"
-        className="bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700"
+        className={`bg-gray-900 text-white px-4 py-2 rounded-full hover:bg-gray-700 ${
+          loading ? "opacity-50 cursor-not-allowed" : ""
+        }`}
+        disabled={loading}
       >
-        Log In
+        {loading ? "Logging in..." : "Log In"}
       </button>
     </form>
   );
