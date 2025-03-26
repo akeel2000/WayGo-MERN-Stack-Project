@@ -10,6 +10,7 @@ const userRoutes = require("./routes/Akeel/userRoutes");
 const guideRoutes = require("./routes/Akeel/guideRoutes");
 const userManagementRoutes = require("./routes/Akeel/userManagementRoutes");
 const hotelRoutes = require("./routes/risi/hotelRoute"); // Updated hotel route path
+const rentalVehicleRoutes = require("./routes/Akeel/rentalVehicleRoutes");
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/guides", guideRoutes);
 app.use("/api/admin/users", userManagementRoutes);
 app.use("/api/hotels", hotelRoutes); // Ensure hotels route is correctly placed
+app.use("/api/rentalVehicles", rentalVehicleRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));

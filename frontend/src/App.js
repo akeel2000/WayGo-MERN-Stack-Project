@@ -14,8 +14,6 @@ import GuideDetails from "./Pages/GuideDetails";
 import GuideList from "./Pages/GuideList"; // if you have one for listing guides
 import ProtectedRoute from "./components/ProtectedRoute";
 import About from "./Pages/About";
-import Register from "./Pages/Register";
-import SignIn from "./Pages/SignIn";
 
 
 function App() {
@@ -26,7 +24,7 @@ function App() {
       <Route path="/signIn" element={<PublicLayout><SignIn /></PublicLayout>} />
       <Route path="/register" element={<PublicLayout><Register /></PublicLayout>} />
       <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
-      <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+
 
 
       {/* Protected Routes for Users */}
@@ -38,6 +36,7 @@ function App() {
       <Route path="/admin-dashboard" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
       <Route path="/admin/user-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><UserManagement /></AdminLayout></ProtectedRoute>} />
       <Route path="/admin/guide-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminGuideManagement /></AdminLayout></ProtectedRoute>} />
+      <Route path="/admin/rent-car-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><RentalVehicles /></AdminLayout></ProtectedRoute>} />
 
       <Route path="*" element={<div className="p-4">404 Not Found</div>} />
     </Routes>
