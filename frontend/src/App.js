@@ -15,6 +15,8 @@ import AdminGuideManagement from "./Pages/AdminGuideManagement";
 import GuideDetails from "./Pages/GuideDetails";
 import GuideList from "./Pages/GuideList"; // if you have one for listing guides
 import ProtectedRoute from "./components/ProtectedRoute";
+import About from "./Pages/About";
+
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
       <Route path="/login" element={<PublicLayout><LoginForm /></PublicLayout>} />
       <Route path="/signup" element={<PublicLayout><SignUpForm /></PublicLayout>} />
       <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
+      <Route path="/contact" element={<PublicLayout><About /></PublicLayout>} />
 
 
       {/* Protected Routes for Users */}
