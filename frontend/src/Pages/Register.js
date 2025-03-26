@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Lock, Mail } from "lucide-react";
+import { Lock, Mail, User } from "lucide-react";
 
-function LoginForm() {
+function Register() {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: ""
   });
   const [errors, setErrors] = useState({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,6 +23,10 @@ function LoginForm() {
   const validateForm = () => {
     const newErrors = {};
 
+    if (!formData.name.trim()) {
+      newErrors.name = "Full name is required";
+    }
+
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -31,46 +35,48 @@ function LoginForm() {
 
     if (!formData.password) {
       newErrors.password = "Password is required";
+    } else if (formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null);
-
     if (validateForm()) {
-      setLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/auth/login", {
+        const response = await fetch("http://localhost:5000/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password
+          }),
         });
         const data = await response.json();
 
         if (response.ok) {
-          if (data.role === "admin") {
-            navigate("/admin-dashboard");
-          } else {
-            navigate("/user-dashboard");
-          }
+          alert("Registration successful!");
+          navigate("/?showLoginModal=true");
         } else {
-          setError(data.message || "Login failed");
+          alert(data.error || "Registration failed");
         }
       } catch (err) {
         console.error(err);
-        setError("An error occurred");
+        alert("An error occurred");
       }
-      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 pt-32 md:pt-24 pb-10">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-center">
@@ -81,16 +87,34 @@ function LoginForm() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleLogin} className="p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="p-8 space-y-6">
           <h2 className="text-2xl font-bold text-gray-800 text-center">
-            Welcome Back
+            Create Your Account
           </h2>
 
-          {error && (
-            <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
-              {error}
+          {/* Full Name */}
+          <div>
+            <label className="block text-sm font-medium text-amber-600 mb-1">
+              Full Name
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-amber-500" />
+              </div>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.name ? "border-amber-600" : "border-amber-200"
+                  } bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                placeholder="John Doe"
+              />
             </div>
-          )}
+            {errors.name && (
+              <p className="mt-1 text-sm text-amber-600">{errors.name}</p>
+            )}
+          </div>
 
           {/* Email */}
           <div>
@@ -140,56 +164,47 @@ function LoginForm() {
             )}
           </div>
 
-          {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-sm font-medium text-amber-600 mb-1">
+              Confirm Password
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Lock className="h-5 w-5 text-amber-500" />
+              </div>
               <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-amber-300 rounded"
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.confirmPassword ? "border-amber-600" : "border-amber-200"
+                  } bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                placeholder="••••••••"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
-                Remember me
-              </label>
             </div>
-            <button
-              type="button"
-              className="text-sm font-medium text-amber-600 hover:text-amber-500 focus:outline-none"
-            >
-              Forgot password?
-            </button>
+            {errors.confirmPassword && (
+              <p className="mt-1 text-sm text-amber-600">{errors.confirmPassword}</p>
+            )}
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
-            className={`w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 ${loading ? "opacity-70 cursor-not-allowed" : "hover:scale-[1.02]"
-              } focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50`}
+            className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
           >
-            {loading ? (
-              <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Signing In...
-              </span>
-            ) : (
-              "Sign In"
-            )}
+            Sign Up
           </button>
 
-          {/* Sign Up Link */}
+          {/* Login Link */}
           <div className="text-center text-sm text-gray-600">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <button
               type="button"
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate("/?showLoginModal=true")}
               className="font-medium text-amber-600 hover:text-amber-700 focus:outline-none"
             >
-              Sign up
+              Log in
             </button>
           </div>
         </form>
@@ -198,4 +213,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default Register;
