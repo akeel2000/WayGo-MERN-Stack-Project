@@ -25,7 +25,7 @@ function App() {
       <Route path="/login" element={<PublicLayout><LoginForm /></PublicLayout>} />
       <Route path="/signup" element={<PublicLayout><SignUpForm /></PublicLayout>} />
       <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
-      <Route path="/services/rentalvehicle" element={<PublicLayout><RentalVehicles /></PublicLayout>} />
+      
 
 
       {/* Protected Routes for Users */}
@@ -37,6 +37,7 @@ function App() {
       <Route path="/admin-dashboard" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
       <Route path="/admin/user-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><UserManagement /></AdminLayout></ProtectedRoute>} />
       <Route path="/admin/guide-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminGuideManagement /></AdminLayout></ProtectedRoute>} />
+      <Route path="/admin/rent-car-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><RentalVehicles/></AdminLayout></ProtectedRoute>} />
 
       <Route path="*" element={<div className="p-4">404 Not Found</div>} />
     </Routes>
