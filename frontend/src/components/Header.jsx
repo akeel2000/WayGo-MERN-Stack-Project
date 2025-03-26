@@ -10,13 +10,12 @@ function Header() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/auth/isLoggedIn", {
       credentials: "include",
     })
-      .then((res) => res.ok ? res.json() : Promise.reject("Not logged in"))
+      .then((res) => (res.ok ? res.json() : Promise.reject("Not logged in")))
       .then((data) => {
         setUser({
           id: data.userId,
@@ -34,14 +33,6 @@ function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    if (params.get("showLoginModal") === "true") {
-      setShowModal(true);
-      navigate(location.pathname, { replace: true });
-    }
-  }, [location, navigate]);
-
   const handleLogout = async () => {
     try {
       await fetch("http://localhost:5000/api/auth/logout", {
@@ -50,14 +41,22 @@ function Header() {
       });
       setUser(null);
       setIsProfileOpen(false);
-      navigate("/?showLoginModal=true");
+      navigate("/login");
     } catch (err) {
       console.error(err);
-      navigate("/?showLoginModal=true");
+      navigate("/login");
     }
   };
 
   const toggleDropdown = (setter, state) => setter(!state);
+
+  // Function to return active link classes based on path
+  const navLinkClasses = (path) =>
+    `px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
+      location.pathname === path
+        ? "text-amber-600 bg-amber-50"
+        : "text-gray-700 hover:bg-amber-50 hover:text-orange-500"
+    }`;
 
   return (
     <header
@@ -80,41 +79,43 @@ function Header() {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-2">
-          {['/', '/destinations', '/contact'].map((path, i) => (
-            <Link
-              key={i}
-              to={path}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-                location.pathname === path
-                  ? "text-amber-600 bg-amber-50"
-                  : "text-gray-700 hover:bg-amber-50 hover:text-orange-500"
-              }`}
-            >
-              {path === '/' ? 'Home' : path.slice(1).charAt(0).toUpperCase() + path.slice(2)}
-            </Link>
-          ))}
+          <Link to="/" className={navLinkClasses("/")}>
+            Home
+          </Link>
+          <Link to="/destinations" className={navLinkClasses("/destinations")}>
+            Destination
+          </Link>
+          <Link to="/about" className={navLinkClasses("/about")}>
+            About
+          </Link>
 
-          {/* Services dropdown */}
-          <div className="relative group">
+          {/* Services dropdown inserted here */}
+          <div className="relative">
             <button
               onClick={() => toggleDropdown(setIsServicesOpen, isServicesOpen)}
               className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-                isServicesOpen || location.pathname.includes('/services')
+                isServicesOpen || location.pathname.includes("/services")
                   ? "text-amber-600 bg-amber-50"
                   : "text-gray-700 hover:bg-amber-50 hover:text-orange-500"
               }`}
             >
               Services
               <svg
-                className={`ml-1 w-4 h-4 transition-transform duration-200 ${isServicesOpen ? "rotate-180" : ""}`}
+                className={`ml-1 w-4 h-4 transition-transform duration-200 ${
+                  isServicesOpen ? "rotate-180" : ""
+                }`}
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
-
             {isServicesOpen && (
               <div className="absolute left-0 mt-1 w-56 bg-white border border-gray-100 rounded-lg shadow-xl z-50 overflow-hidden">
                 {["hotel-booking", "car-rental", "guide"].map((service, idx) => (
@@ -128,12 +129,21 @@ function Header() {
                         : "text-gray-700 hover:bg-amber-50 hover:text-orange-500"
                     }`}
                   >
-                    {service.replace("-", " ").replace(/^./, (c) => c.toUpperCase())}
+                    {service
+                      .replace("-", " ")
+                      .replace(/^./, (c) => c.toUpperCase())}
                   </Link>
                 ))}
               </div>
             )}
           </div>
+
+          <Link to="/blog" className={navLinkClasses("/blog")}>
+            Blog
+          </Link>
+          <Link to="/contact" className={navLinkClasses("/contact")}>
+            Contact Us
+          </Link>
         </nav>
 
         {/* User Actions & Auth */}
@@ -141,13 +151,13 @@ function Header() {
           {!user ? (
             <>
               <button
-                onClick={() => setShowModal(true)}
+                onClick={() => navigate("/login")}
                 className="px-5 py-2 rounded-full font-medium text-amber-600 hover:text-orange-500"
               >
                 Sign In
               </button>
               <button
-                onClick={() => setShowModal(true)}
+                onClick={() => navigate("/register")}
                 className="px-5 py-2 rounded-full font-medium bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg hover:shadow-xl hover:from-amber-600 hover:to-orange-600"
               >
                 Register
@@ -173,13 +183,18 @@ function Header() {
                 {isProfileOpen && (
                   <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-100 shadow-xl rounded-lg z-50">
                     <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-amber-50 to-amber-100">
-                      <p className="font-bold text-gray-800">{user.name || "User"}</p>
+                      <p className="font-bold text-gray-800">
+                        {user.name || "User"}
+                      </p>
                       <p className="text-sm text-gray-600">{user.email}</p>
                     </div>
                     <div className="p-4">
                       <p className="text-xs text-gray-500 mb-2">ID: {user.id}</p>
                       <p className="text-sm text-gray-700 mb-1">
-                        Role: <span className="font-medium text-amber-600">{user.role}</span>
+                        Role:{" "}
+                        <span className="font-medium text-amber-600">
+                          {user.role}
+                        </span>
                       </p>
                     </div>
                     <button
@@ -203,15 +218,23 @@ function Header() {
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {isMobileMenuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             )}
           </svg>
         </button>
       </div>
-
-      {/* Modal component can be added here */}
     </header>
   );
 }
