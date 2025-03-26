@@ -26,7 +26,7 @@ function App() {
       <Route path="/login" element={<PublicLayout><LoginForm /></PublicLayout>} />
       <Route path="/signup" element={<PublicLayout><SignUpForm /></PublicLayout>} />
       <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
-      <Route path="/contact" element={<PublicLayout><About /></PublicLayout>} />
+      <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
 
 
       {/* Protected Routes for Users */}
