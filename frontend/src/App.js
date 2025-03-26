@@ -14,6 +14,9 @@ import GuideDetails from "./Pages/GuideDetails";
 import GuideList from "./Pages/GuideList"; // if you have one for listing guides
 import ProtectedRoute from "./components/ProtectedRoute";
 import About from "./Pages/About";
+import RentalVehicles from './Pages/ifaz/RentalVehicleManagment';
+import SignIn from './Pages/SignIn';
+import Register from './Pages/Register';
 
 
 function App() {
@@ -24,6 +27,7 @@ function App() {
       <Route path="/signIn" element={<PublicLayout><SignIn /></PublicLayout>} />
       <Route path="/register" element={<PublicLayout><Register /></PublicLayout>} />
       <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
+      <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
 
 
 
