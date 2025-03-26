@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, Mail } from "lucide-react";
 
-function LoginForm() {
+function SignIn() {
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -70,7 +70,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 pt-32 md:pt-24 pb-10">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-center">
@@ -198,4 +198,4 @@ function LoginForm() {
   );
 }
 
-export default LoginForm;
+export default SignIn;

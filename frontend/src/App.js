@@ -6,7 +6,6 @@ import PublicLayout from "./components/PublicLayout";
 import AdminLayout from "./components/AdminLayout";
 
 import Home from "./Pages/Home";
-import LoginForm from "./Pages/LoginForm";
 import AdminDashboard from "./Pages/AdminDashboard";
 import UserDashboard from "./Pages/UserDashboard";
 import UserManagement from "./Pages/UserManagement";
@@ -16,6 +15,7 @@ import GuideList from "./Pages/GuideList"; // if you have one for listing guides
 import ProtectedRoute from "./components/ProtectedRoute";
 import About from "./Pages/About";
 import Register from "./Pages/Register";
+import SignIn from "./Pages/SignIn";
 
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-      <Route path="/login" element={<PublicLayout><LoginForm /></PublicLayout>} />
+      <Route path="/signIn" element={<PublicLayout><SignIn /></PublicLayout>} />
       <Route path="/register" element={<PublicLayout><Register /></PublicLayout>} />
       <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
       <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
