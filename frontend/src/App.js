@@ -17,6 +17,7 @@ import About from "./Pages/About";
 import RentalVehicles from './Pages/ifaz/RentalVehicleManagment';
 import SignIn from './Pages/SignIn';
 import Register from './Pages/Register';
+import Contact from "./Pages/Contact";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
       <Route path="/register" element={<PublicLayout><Register /></PublicLayout>} />
       <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
       <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+      <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
 
 
 
