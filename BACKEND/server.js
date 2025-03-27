@@ -10,7 +10,7 @@ const userRoutes = require("./routes/Akeel/userRoutes");
 const guideRoutes = require("./routes/Akeel/guideRoutes");
 const userManagementRoutes = require("./routes/Akeel/userManagementRoutes");
 const hotelRoutes = require("./routes/risi/hotelRoute"); // Updated hotel route path
-const rentalVehicleRoutes = require("./routes/ifaz/rentalVehicleRoutes");
+const rentalVehicleRoutes = require("./routes/Ifaz/RentalVehicleRoutes");
 
 const app = express();
 
@@ -24,10 +24,8 @@ app.use(
   })
 );
 
+// Serve static files from the "uploads" folder
 app.use("/uploads", express.static("uploads"));
-
-
-
 
 // Connect to MongoDB
 mongoose
@@ -41,7 +39,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/guides", guideRoutes);
 app.use("/api/admin/users", userManagementRoutes);
-app.use("/api/hotels", hotelRoutes); // Ensure hotels route is correctly placed
+app.use("/api/hotels", hotelRoutes);
 app.use("/api/rentalVehicles", rentalVehicleRoutes);
 
 const PORT = process.env.PORT || 5000;

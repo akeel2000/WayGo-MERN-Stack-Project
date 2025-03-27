@@ -14,8 +14,7 @@ const RentalVehicleSchema = new mongoose.Schema(
     dailyRate: { type: Number, required: true },
     available: { type: Boolean, default: true },
     description: { type: String },
-    // Array of images (each contains a URL and contentType)
-    images: [ImageSchema],
+    images: [ImageSchema], // Array of image objects
   },
   { timestamps: true }
 );

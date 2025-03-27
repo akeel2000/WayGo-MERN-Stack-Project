@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-function RentalVehicles() {
+function RentalVehiclesAdmin() {
   const [vehicles, setVehicles] = useState([]);
   const [error, setError] = useState("");
   const [editingVehicle, setEditingVehicle] = useState(null);
@@ -21,7 +21,7 @@ function RentalVehicles() {
   // State for images already saved on the server (when editing)
   const [existingImages, setExistingImages] = useState([]);
 
-  // Fetch vehicles (list endpoint without images)
+  // Fetch vehicles
   const fetchVehicles = async () => {
     try {
       const res = await fetch("http://localhost:5000/api/rentalVehicles", {
@@ -87,11 +87,10 @@ function RentalVehicles() {
     }
   };
 
-  // Handle editing a vehicle: load full details and images.
+  // Handle editing a vehicle: load full details and images
   const handleEdit = async (vehicle) => {
     const fullVehicle = await fetchVehicleDetails(vehicle._id);
     if (!fullVehicle) return;
-
     setEditingVehicle(fullVehicle);
     setFormDataState({
       name: fullVehicle.name,
@@ -102,9 +101,7 @@ function RentalVehicles() {
       available: fullVehicle.available,
       description: fullVehicle.description || "",
     });
-    // Set existing images from full vehicle details.
     setExistingImages(fullVehicle.images || []);
-    // Reset new file uploads.
     setFilesState([]);
   };
 
@@ -120,12 +117,12 @@ function RentalVehicles() {
       formData.append("available", formDataState.available);
       formData.append("description", formDataState.description);
 
-      // Append new image files if any.
+      // Append new image files if any
       filesState.forEach((file) => {
         if (file) formData.append("images", file);
       });
 
-      // When editing, send the kept existing images as a JSON string.
+      // When editing, send the kept existing images as a JSON string
       if (editingVehicle) {
         formData.append("keptImages", JSON.stringify(existingImages));
       }
@@ -148,7 +145,7 @@ function RentalVehicles() {
         throw new Error(errData.message || "Failed to save vehicle");
       }
 
-      // Reset states after submission.
+      // Reset form and refresh list
       setFormDataState({
         name: "",
         make: "",
@@ -185,13 +182,15 @@ function RentalVehicles() {
 
   return (
     <div className="p-4 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4">Rental Vehicles</h1>
+      <h1 className="text-3xl font-bold mb-4">Rental Vehicles (Admin)</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
+      {/* Form for Add / Edit */}
       <form onSubmit={handleSubmit} className="mb-6 space-y-4 border p-4 rounded">
         <h2 className="text-2xl font-bold">
           {editingVehicle ? "Edit Vehicle" : "Add New Vehicle"}
         </h2>
+
         {/* Vehicle Info Inputs */}
         <div>
           <label className="block">Name</label>
@@ -267,7 +266,7 @@ function RentalVehicles() {
           />
         </div>
 
-        {/* Existing Images Section (only when editing) */}
+        {/* Existing Images (only when editing) */}
         {editingVehicle && existingImages.length > 0 && (
           <div>
             <label className="block">Existing Images</label>
@@ -292,7 +291,7 @@ function RentalVehicles() {
           </div>
         )}
 
-        {/* New Image File Uploads */}
+        {/* New Image Uploads */}
         <div>
           <label className="block">Upload New Images</label>
           {filesState.map((file, idx) => (
@@ -345,27 +344,26 @@ function RentalVehicles() {
           {vehicles.map((vehicle) => (
             <div key={vehicle._id} className="border p-4 rounded shadow">
               <h2 className="text-xl font-bold mb-2">{vehicle.name}</h2>
-              <p className="mb-1">
-                <strong>Make:</strong> {vehicle.make}
-              </p>
-              <p className="mb-1">
-                <strong>Model:</strong> {vehicle.model}
-              </p>
-              <p className="mb-1">
-                <strong>Year:</strong> {vehicle.year}
-              </p>
-              <p className="mb-1">
-                <strong>Daily Rate:</strong> {vehicle.dailyRate}
-              </p>
-              <p className="mb-1">
-                <strong>Available:</strong> {vehicle.available ? "Yes" : "No"}
-              </p>
+              <p className="mb-1"><strong>Make:</strong> {vehicle.make}</p>
+              <p className="mb-1"><strong>Model:</strong> {vehicle.model}</p>
+              <p className="mb-1"><strong>Year:</strong> {vehicle.year}</p>
+              <p className="mb-1"><strong>Daily Rate:</strong> {vehicle.dailyRate}</p>
+              <p className="mb-1"><strong>Available:</strong> {vehicle.available ? "Yes" : "No"}</p>
               {vehicle.description && (
-                <p className="mb-1">
-                  <strong>Description:</strong> {vehicle.description}
-                </p>
+                <p className="mb-1"><strong>Description:</strong> {vehicle.description}</p>
               )}
-              {/* Note: In the list view images are not available as the list endpoint excludes them */}
+              {vehicle.images && vehicle.images.length > 0 && (
+                <div className="grid grid-cols-2 gap-2 my-2">
+                  {vehicle.images.map((imgObj, index) => (
+                    <img
+                      key={index}
+                      src={`http://localhost:5000${imgObj.url}`}
+                      alt={`${vehicle.name} ${index + 1}`}
+                      className="object-cover w-full h-32"
+                    />
+                  ))}
+                </div>
+              )}
               <div className="flex space-x-2 mt-2">
                 <button
                   onClick={() => handleEdit(vehicle)}
@@ -388,4 +386,4 @@ function RentalVehicles() {
   );
 }
 
-export default RentalVehicles;
+export default RentalVehiclesAdmin;
