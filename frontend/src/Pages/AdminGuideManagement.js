@@ -12,6 +12,7 @@ function AdminGuideManagement() {
     languages: "",
     available: true,
   });
+  const [selectedImages, setSelectedImages] = useState([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -34,41 +35,54 @@ function AdminGuideManagement() {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setSelectedImages(e.target.files);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const payload = {
-        ...formData,
-        experience: Number(formData.experience),
-        languages: formData.languages.split(",").map((lang) => lang.trim()),
-      };
+      // Build FormData
+      const form = new FormData();
+      form.append("name", formData.name);
+      form.append("about", formData.about);
+      form.append("experience", formData.experience);
+      form.append("location", formData.location);
+      form.append("languages", formData.languages);
+      form.append("available", formData.available);
 
-      let res;
-      if (editingGuide) {
-        res = await fetch(`http://localhost:5000/api/guides/${editingGuide._id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(payload),
-        });
-      } else {
-        res = await fetch("http://localhost:5000/api/guides", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(payload),
-        });
+      // Append files
+      if (selectedImages.length > 0) {
+        for (let i = 0; i < selectedImages.length; i++) {
+          form.append("images", selectedImages[i]);
+        }
       }
+
+      let url = "http://localhost:5000/api/guides";
+      let method = "POST";
+      if (editingGuide) {
+        url = `http://localhost:5000/api/guides/${editingGuide._id}`;
+        method = "PUT";
+      }
+
+      const res = await fetch(url, {
+        method,
+        credentials: "include",
+        body: form, // IMPORTANT: no manual "Content-Type" header
+      });
+
       if (!res.ok) {
         const errData = await res.json();
         throw new Error(errData.message || "Failed to save guide");
       }
+
+      // Reset form
       setFormData({
         name: "",
         about: "",
@@ -77,7 +91,10 @@ function AdminGuideManagement() {
         languages: "",
         available: true,
       });
+      setSelectedImages([]);
       setEditingGuide(null);
+
+      // Refresh list
       fetchGuides();
     } catch (err) {
       console.error(err);
@@ -115,7 +132,7 @@ function AdminGuideManagement() {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Guide Management (Admin)</h1>
       {error && <p className="text-red-500 mb-4">{error}</p>}
-      
+
       {/* Form for Creating/Updating a Guide */}
       <form onSubmit={handleSubmit} className="mb-6 space-y-4">
         <input
@@ -171,6 +188,19 @@ function AdminGuideManagement() {
             onChange={handleInputChange}
           />
         </div>
+
+        {/* File input for uploading images */}
+        <div>
+          <label className="block mb-1 font-medium">Upload Images:</label>
+          <input
+            type="file"
+            name="images"
+            multiple
+            onChange={handleFileChange}
+            className="border p-2 rounded w-full"
+          />
+        </div>
+
         <button
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
@@ -203,7 +233,9 @@ function AdminGuideManagement() {
                   <td className="border px-4 py-2 text-sm">{guide.about}</td>
                   <td className="border px-4 py-2 text-sm">{guide.experience}</td>
                   <td className="border px-4 py-2 text-sm">{guide.location}</td>
-                  <td className="border px-4 py-2 text-sm">{guide.languages.join(", ")}</td>
+                  <td className="border px-4 py-2 text-sm">
+                    {guide.languages.join(", ")}
+                  </td>
                   <td className="border px-4 py-2 text-sm">
                     {guide.available ? "Yes" : "No"}
                   </td>
@@ -238,4 +270,3 @@ function AdminGuideManagement() {
 }
 
 export default AdminGuideManagement;
-

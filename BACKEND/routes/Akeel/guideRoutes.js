@@ -1,4 +1,20 @@
+// routes/guideRoutes.js
 const express = require("express");
+const multer = require("multer");
+const path = require("path");
+
+// Configure Multer (files stored in "uploads" folder)
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Adjust path as needed
+  },
+  filename: (req, file, cb) => {
+    // e.g., keep original name or generate a unique one
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
+
 const {
   addGuide,
   getGuides,
@@ -6,23 +22,23 @@ const {
   updateGuide,
   deleteGuide,
   addReview,
-  getReviews
+  getReviews,
 } = require("../../controllers/Akeel/guideController");
+
 const authMiddleware = require("../../middleware/authMiddleware");
 const optionalAuthMiddleware = require("../../middleware/optionalAuthMiddleware");
 
 const router = express.Router();
 
 // Guide Management Routes (Admin-only for modifications)
-router.post("/", authMiddleware(["admin"]), addGuide);
+// Use Multer to handle file uploads for guide creation and update.
+router.post("/", authMiddleware(["admin"]), upload.array("images"), addGuide);
 router.get("/", getGuides);
 router.get("/:id", getGuideById);
-router.put("/:id", authMiddleware(["admin"]), updateGuide);
+router.put("/:id", authMiddleware(["admin"]), upload.array("images"), updateGuide);
 router.delete("/:id", authMiddleware(["admin"]), deleteGuide);
 
 // Guide Review & Rating Routes
-// Use optional auth middleware so if a token exists, req.user is set,
-// but if not, it still allows the review to be added as a guest.
 router.post("/:id/reviews", optionalAuthMiddleware, addReview);
 router.get("/:id/reviews", getReviews);
 

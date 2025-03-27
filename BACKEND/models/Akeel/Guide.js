@@ -1,5 +1,11 @@
 const mongoose = require("mongoose");
 
+
+const ImageSchema = new mongoose.Schema({
+  url: { type: String },
+  contentType: { type: String },
+});
+
 const ReviewSchema = new mongoose.Schema(
   {
     // Remove "required: true" to allow null values for guest reviews.
@@ -13,6 +19,7 @@ const ReviewSchema = new mongoose.Schema(
 
 const GuideSchema = new mongoose.Schema(
   {
+    images: [ImageSchema],
     name: { type: String, required: true },
     about: { type: String, required: true },
     experience: { type: Number, required: true },
