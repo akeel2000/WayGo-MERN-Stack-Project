@@ -147,12 +147,42 @@ exports.deleteGuide = async (req, res) => {
   }
 };
 
+
 // Add a review (Users, Admins, or Guests)
 exports.addReview = async (req, res) => {
-  // same as your existing logic
+  try {
+    const { rating, comment } = req.body;
+    const guide = await Guide.findById(req.params.id);
+    if (!guide) return res.status(404).json({ message: "Guide not found" });
+
+    const review = {
+      user: req.user ? req.user.id : null,
+      name: req.user ? req.user.name : "Guest",
+      rating: Number(rating),
+      comment
+    };
+    
+
+    guide.reviews.push(review);
+    // Calculate new average rating
+    guide.rating =
+      guide.reviews.reduce((acc, item) => item.rating + acc, 0) / guide.reviews.length;
+
+    await guide.save();
+    res.status(201).json({ message: "Review added successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to add review", error: error.message });
+  }
 };
+
 
 // Get reviews for a guide
 exports.getReviews = async (req, res) => {
-  // same as your existing logic
+  try {
+    const guide = await Guide.findById(req.params.id).select("reviews rating");
+    if (!guide) return res.status(404).json({ message: "Guide not found" });
+    res.json(guide.reviews);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch reviews", error: error.message });
+  }
 };

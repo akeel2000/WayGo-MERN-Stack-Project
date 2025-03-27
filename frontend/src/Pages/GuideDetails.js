@@ -1,4 +1,3 @@
-// src/Pages/GuideDetails.js
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
 
@@ -17,8 +16,6 @@ function renderStars(rating, className = "") {
 
 /** A simple star-based rating input component for the review form. */
 function StarRatingInput({ value, onChange }) {
-  // "value" is the current rating (1..5)
-  // "onChange" is a callback that sets the new rating
   const handleClick = (starValue) => {
     onChange(starValue);
   };
@@ -111,7 +108,7 @@ function GuideDetails() {
   };
 
   return (
-    <div className=" pt-24 p-4 max-w-4xl mx-auto">
+    <div className="pt-24 p-4 max-w-4xl mx-auto">
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       {guide ? (
@@ -132,6 +129,21 @@ function GuideDetails() {
             <p className="mb-2">
               <strong>Available:</strong> {guide.available ? "Yes" : "No"}
             </p>
+
+            {/* Image Display */}
+            {guide.images && guide.images.length > 0 ? (
+              <img
+                src={`http://localhost:5000${guide.images[0].url}`}
+                alt={guide.name}
+                className="w-full h-64 object-cover mb-4 rounded"
+              />
+            ) : (
+              <img
+                src="https://via.placeholder.com/500x300.png?text=No+Image+Available"
+                alt="No Image Available"
+                className="w-full h-64 object-cover mb-4 rounded"
+              />
+            )}
           </div>
 
           {/* RATING & DISTRIBUTION */}

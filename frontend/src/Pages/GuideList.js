@@ -1,4 +1,3 @@
-// src/Pages/GuideList.js
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -48,10 +47,16 @@ function GuideList() {
               className="block bg-white border border-gray-200 p-6 rounded-lg shadow hover:shadow-lg transition-shadow"
             >
               {/* Render the first image if available */}
-              {guide.images && guide.images.length > 0 && (
+              {guide.images && guide.images.length > 0 ? (
                 <img
-                  src={guide.images[0].url}
+                  src={`http://localhost:5000${guide.images[0].url}`} // Use the first image in the array
                   alt={guide.name}
+                  className="w-full h-48 object-cover mb-4 rounded"
+                />
+              ) : (
+                <img
+                  src="https://via.placeholder.com/400x300.png?text=No+Image+Available" // Placeholder image if no image available
+                  alt="No image available"
                   className="w-full h-48 object-cover mb-4 rounded"
                 />
               )}
@@ -77,7 +82,6 @@ function GuideList() {
                   <span className="font-medium">Languages:</span>{" "}
                   {guide.languages.join(", ")}
                 </p>
-                {/* If you have an "available" field */}
                 <p>
                   <span className="font-medium">Available:</span>{" "}
                   {guide.available ? "Yes" : "No"}
