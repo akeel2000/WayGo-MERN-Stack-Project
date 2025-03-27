@@ -70,21 +70,29 @@ function SignIn() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 pt-32 md:pt-24 pb-10">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-center">
-          <h1 className="text-3xl font-bold text-white">
-            <span className="text-amber-100">Way</span>Go
-          </h1>
-          <p className="text-amber-100 mt-1">Tourist Management System</p>
+    <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4 py-16 md:py-24">
+      <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white rounded-xl shadow-lg overflow-hidden">
+        {/* Image Side (Left) */}
+        <div className="w-full md:w-1/2 h-96 md:h-auto relative">
+          <img
+            src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&auto=format&fit=crop&q=80&fit=crop&h=700"
+            alt="Travel adventure"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+            <div>
+              <h1 className="text-3xl font-bold text-white">
+                <span className="text-amber-300">Way</span>Go
+              </h1>
+              <p className="text-amber-100 mt-1">Begin your journey with us</p>
+            </div>
+          </div>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleLogin} className="p-8 space-y-6">
-          <h2 className="text-2xl font-bold text-gray-800 text-center">
-            Welcome Back
-          </h2>
+        {/* Form Side (Right) */}
+        <div className="w-full md:w-1/2 p-8 md:p-10 space-y-6">
+          <h2 className="text-2xl font-bold text-gray-800">Create Your Account</h2>
+          <p className="text-gray-600">Join our community of travelers</p>
 
           {error && (
             <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
@@ -92,9 +100,9 @@ function SignIn() {
             </div>
           )}
 
-          {/* Email */}
+          {/* Email Field */}
           <div>
-            <label className="block text-sm font-medium text-amber-600 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address
             </label>
             <div className="relative">
@@ -106,8 +114,8 @@ function SignIn() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.email ? "border-amber-600" : "border-amber-200"
-                  } bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.email ? "border-amber-600" : "border-gray-300"
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
                 placeholder="your@email.com"
               />
             </div>
@@ -116,9 +124,9 @@ function SignIn() {
             )}
           </div>
 
-          {/* Password */}
+          {/* Password Field */}
           <div>
-            <label className="block text-sm font-medium text-amber-600 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <div className="relative">
@@ -130,8 +138,8 @@ function SignIn() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.password ? "border-amber-600" : "border-amber-200"
-                  } bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.password ? "border-amber-600" : "border-gray-300"
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
                 placeholder="••••••••"
               />
             </div>
@@ -147,9 +155,12 @@ function SignIn() {
                 id="remember-me"
                 name="remember-me"
                 type="checkbox"
-                className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-amber-300 rounded"
+                className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-700"
+              >
                 Remember me
               </label>
             </div>
@@ -165,14 +176,31 @@ function SignIn() {
           <button
             type="submit"
             disabled={loading}
+            onClick={handleLogin}
             className={`w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 ${loading ? "opacity-70 cursor-not-allowed" : "hover:scale-[1.02]"
               } focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50`}
           >
             {loading ? (
               <span className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Signing In...
               </span>
@@ -192,7 +220,7 @@ function SignIn() {
               Sign up
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
