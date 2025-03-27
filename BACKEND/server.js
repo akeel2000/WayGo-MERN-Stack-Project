@@ -10,7 +10,7 @@ const userRoutes = require("./routes/Akeel/userRoutes");
 const guideRoutes = require("./routes/Akeel/guideRoutes");
 const userManagementRoutes = require("./routes/Akeel/userManagementRoutes");
 const hotelRoutes = require("./routes/risi/hotelRoute"); // Updated hotel route path
-const rentalVehicleRoutes = require("./routes/Akeel/rentalVehicleRoutes");
+const rentalVehicleRoutes = require("./routes/Ifaz/RentalVehicleRoutes");
 
 const app = express();
 
@@ -23,6 +23,11 @@ app.use(
     credentials: true,
   })
 );
+
+app.use("/uploads", express.static("uploads"));
+
+
+
 
 // Connect to MongoDB
 mongoose

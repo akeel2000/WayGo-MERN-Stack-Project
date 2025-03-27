@@ -1,7 +1,7 @@
-// routes/Akeel/rentalVehicleRoutes.js
 const express = require("express");
 const router = express.Router();
-const authMiddleware = require("../../middleware/authMiddleware");
+const authMiddleware = require("../../middleware/authMiddleware"); // Ensure this middleware exists
+const upload = require("../../middleware/upload");
 const {
   addVehicle,
   getVehicles,
@@ -10,19 +10,19 @@ const {
   deleteVehicle,
 } = require("../../controllers/Ifaz/RentalVehicleController");
 
-// Create a new rental vehicle (Admin only)
-router.post("/", authMiddleware(["admin"]), addVehicle);
+// Admin-only route: Create a new vehicle with up to 5 images
+router.post("/", authMiddleware(["admin"]), upload.array("images", 5), addVehicle);
 
-// Get all rental vehicles (can be public; remove authMiddleware if not needed)
+// Public route: Get list of vehicles (excluding images)
 router.get("/", getVehicles);
 
-// Get a specific rental vehicle by ID (can be public)
+// Public route: Get full details of a vehicle by ID (includes images)
 router.get("/:id", getVehicleById);
 
-// Update a rental vehicle (Admin only)
-router.put("/:id", authMiddleware(["admin"]), updateVehicle);
+// Admin-only route: Update a vehicle (if new images are uploaded, they replace old ones)
+router.put("/:id", authMiddleware(["admin"]), upload.array("images", 5), updateVehicle);
 
-// Delete a rental vehicle (Admin only)
+// Admin-only route: Delete a vehicle
 router.delete("/:id", authMiddleware(["admin"]), deleteVehicle);
 
 module.exports = router;

@@ -13,9 +13,10 @@ import UserDashboard from "./Pages/UserDashboard";
 import UserManagement from "./Pages/UserManagement";
 import AdminGuideManagement from "./Pages/AdminGuideManagement";
 import GuideDetails from "./Pages/GuideDetails";
+import RentalVehicles from "./Pages/ifaz/RentalVehicleManagment";
 import GuideList from "./Pages/GuideList"; // if you have one for listing guides
 import ProtectedRoute from "./components/ProtectedRoute";
-import RentalVehicles from "./Pages/ifaz/RentalVehicleManagment";
+
 
 function App() {
   return (
