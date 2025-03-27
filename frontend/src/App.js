@@ -4,18 +4,20 @@ import { Routes, Route } from "react-router-dom";
 
 import PublicLayout from "./components/PublicLayout";
 import AdminLayout from "./components/AdminLayout";
-
 import Home from "./Pages/Home";
-import LoginForm from "./Pages/LoginForm";
-import SignUpForm from "./Pages/SignUpForm";
 import AdminDashboard from "./Pages/AdminDashboard";
-import UserDashboard from "./Pages/UserDashboard";
 import UserManagement from "./Pages/UserManagement";
 import AdminGuideManagement from "./Pages/AdminGuideManagement";
 import GuideDetails from "./Pages/GuideDetails";
-import RentalVehicles from "./Pages/ifaz/RentalVehicleManagment";
 import GuideList from "./Pages/GuideList"; // if you have one for listing guides
 import ProtectedRoute from "./components/ProtectedRoute";
+import About from "./Pages/About";
+import RentalVehicles from './Pages/ifaz/RentalVehicleManagment';
+import SignIn from './Pages/SignIn';
+import Register from './Pages/Register';
+import Contact from "./Pages/Contact";
+import Destination from "./Pages/Destination";
+import Blog from "./Pages/Blog";
 
 
 function App() {
@@ -23,14 +25,16 @@ function App() {
     <Routes>
       {/* Public Routes */}
       <Route path="/" element={<PublicLayout><Home /></PublicLayout>} />
-      <Route path="/login" element={<PublicLayout><LoginForm /></PublicLayout>} />
-      <Route path="/signup" element={<PublicLayout><SignUpForm /></PublicLayout>} />
+      <Route path="/signIn" element={<PublicLayout><SignIn /></PublicLayout>} />
+      <Route path="/register" element={<PublicLayout><Register /></PublicLayout>} />
       <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
-      
-
+      <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
+      <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
+      <Route path="/blog" element={<PublicLayout><Blog /></PublicLayout>} />
+      <Route path="/destinations" element={<PublicLayout><Destination /></PublicLayout>} />
 
       {/* Protected Routes for Users */}
-      <Route path="/user-dashboard" element={<ProtectedRoute><PublicLayout><UserDashboard /></PublicLayout></ProtectedRoute>} />
+      <Route path="/Home" element={<ProtectedRoute><PublicLayout><Home /></PublicLayout></ProtectedRoute>} />
 
       <Route path="/guide/:id" element={<PublicLayout><GuideDetails /></PublicLayout>} />
 
@@ -38,7 +42,7 @@ function App() {
       <Route path="/admin-dashboard" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
       <Route path="/admin/user-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><UserManagement /></AdminLayout></ProtectedRoute>} />
       <Route path="/admin/guide-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminGuideManagement /></AdminLayout></ProtectedRoute>} />
-      <Route path="/admin/rent-car-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><RentalVehicles/></AdminLayout></ProtectedRoute>} />
+      <Route path="/admin/rent-car-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><RentalVehicles /></AdminLayout></ProtectedRoute>} />
 
       <Route path="*" element={<div className="p-4">404 Not Found</div>} />
     </Routes>

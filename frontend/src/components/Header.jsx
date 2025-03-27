@@ -41,10 +41,10 @@ function Header() {
       });
       setUser(null);
       setIsProfileOpen(false);
-      navigate("/login");
+      navigate("/signin");
     } catch (err) {
       console.error(err);
-      navigate("/login");
+      navigate("/Signin");
     }
   };
 
@@ -151,7 +151,7 @@ function Header() {
           {!user ? (
             <>
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/signIn")}
                 className="px-5 py-2 rounded-full font-medium text-amber-600 hover:text-orange-500"
               >
                 Sign In
