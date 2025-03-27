@@ -76,25 +76,33 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 pt-32 md:pt-24 pb-10">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-6 text-center">
-          <h1 className="text-3xl font-bold text-white">
-            <span className="text-amber-100">Way</span>Go
-          </h1>
-          <p className="text-amber-100 mt-1">Tourist Management System</p>
+    <div className="min-h-screen flex items-center justify-center bg-amber-50 p-4 pt-24 md:pt-16">
+      <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden relative z-10 mt-16 md:mt-0">
+        {/* Image Side (Left) */}
+        <div className="w-full md:w-1/2 h-72 md:h-auto relative">
+          <img
+            src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&auto=format&fit=crop&q=80&fit=crop&h=600"
+            alt="Travel adventure"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+            <div>
+              <h1 className="text-3xl font-bold text-white">
+                <span className="text-amber-300">Way</span>Go
+              </h1>
+              <p className="text-amber-100 mt-1">Begin your journey with us</p>
+            </div>
+          </div>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-8 space-y-6">
-          <h2 className="text-2xl font-bold text-gray-800 text-center">
-            Create Your Account
-          </h2>
+        {/* Form Side (Right) */}
+        <div className="w-full md:w-1/2 p-8 md:p-10 space-y-6">
+          <h2 className="text-2xl font-bold text-gray-800">Create Your Account</h2>
+          <p className="text-gray-600">Join our community of travelers</p>
 
           {/* Full Name */}
           <div>
-            <label className="block text-sm font-medium text-amber-600 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Full Name
             </label>
             <div className="relative">
@@ -106,8 +114,8 @@ function Register() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.name ? "border-amber-600" : "border-amber-200"
-                  } bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.name ? "border-amber-600" : "border-gray-300"
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
                 placeholder="John Doe"
               />
             </div>
@@ -118,7 +126,7 @@ function Register() {
 
           {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-amber-600 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Email Address
             </label>
             <div className="relative">
@@ -130,8 +138,8 @@ function Register() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.email ? "border-amber-600" : "border-amber-200"
-                  } bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.email ? "border-amber-600" : "border-gray-300"
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
                 placeholder="your@email.com"
               />
             </div>
@@ -142,7 +150,7 @@ function Register() {
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-amber-600 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <div className="relative">
@@ -154,8 +162,8 @@ function Register() {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.password ? "border-amber-600" : "border-amber-200"
-                  } bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.password ? "border-amber-600" : "border-gray-300"
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
                 placeholder="••••••••"
               />
             </div>
@@ -166,7 +174,7 @@ function Register() {
 
           {/* Confirm Password */}
           <div>
-            <label className="block text-sm font-medium text-amber-600 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Confirm Password
             </label>
             <div className="relative">
@@ -178,8 +186,8 @@ function Register() {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.confirmPassword ? "border-amber-600" : "border-amber-200"
-                  } bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.confirmPassword ? "border-amber-600" : "border-gray-300"
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
                 placeholder="••••••••"
               />
             </div>
@@ -191,7 +199,8 @@ function Register() {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
+            onClick={handleSubmit}
+            className="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold rounded-lg shadow-md transition-all duration-300 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
           >
             Sign Up
           </button>
@@ -207,7 +216,7 @@ function Register() {
               Log in
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

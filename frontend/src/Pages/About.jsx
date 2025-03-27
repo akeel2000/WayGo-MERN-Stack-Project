@@ -31,15 +31,11 @@ const About = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="relative h-96 rounded-xl overflow-hidden shadow-xl">
-              <img
-                src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?w=800&auto=format&fit=crop&q=60"
-                alt="Our team traveling"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 p-6 text-white">
-                <p className="text-sm font-light">Our founding team in Bali, 2015</p>
-              </div>
+            <img
+  src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800&auto=format&fit=crop&q=60"
+  alt="Team working together"
+  class="w-full h-full object-cover"
+/>
             </div>
 
             <div className="space-y-6">

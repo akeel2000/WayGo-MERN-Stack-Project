@@ -3,7 +3,7 @@ import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaFacebookF, FaTwitter, FaInsta
 
 const Contact = () => {
   return (
-    <div className="pt-32 md:pt-2min-h-screen bg-amber-50 text-gray-800">
+    <div className="pt-32 md:pt-24 bg-amber-50 text-gray-800">
       {/* Hero Section */}
       <section
         className="relative text-center py-16 px-4 overflow-hidden"
@@ -28,7 +28,7 @@ const Contact = () => {
       <section className="py-8 bg-white">
         <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Contact Details */}
-          <div className="space-y-6">
+          <div className="flex flex-col justify-center space-y-6 ">
             <h2 className="text-2xl font-bold text-gray-800">Get In Touch</h2>
             <div className="space-y-4">
               {/* Address */}
