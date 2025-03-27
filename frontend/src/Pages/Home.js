@@ -1,6 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const WayGoHomepage = () => {
+  const navigate = useNavigate();
+
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   // Service data with online icons - now with images like destinations
