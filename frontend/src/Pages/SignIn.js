@@ -56,7 +56,7 @@ function SignIn() {
           if (data.role === "admin") {
             navigate("/admin-dashboard");
           } else {
-            navigate("/user-dashboard");
+            navigate("/home");
           }
         } else {
           setError(data.message || "Login failed");

@@ -41,10 +41,10 @@ function Header() {
       });
       setUser(null);
       setIsProfileOpen(false);
-      navigate("/login");
+      navigate("/signin");
     } catch (err) {
       console.error(err);
-      navigate("/login");
+      navigate("/Signin");
     }
   };
 

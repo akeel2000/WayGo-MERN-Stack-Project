@@ -20,7 +20,7 @@ const Footer = () => {
               </span>
             </Link>
             <p className="text-gray-600">
-              Making travel seamless and memorable since 2015.
+              Making travel seamless and memorable since 2025.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-500 hover:text-amber-600 transition-colors duration-200">
@@ -95,7 +95,7 @@ const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                <span className="text-gray-600">123 Tourism Street, Travel City, TC 12345</span>
+                <span className="text-gray-600">No 10,colomobo malabe Sri lanka</span>
               </li>
               <li className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-amber-600" />
@@ -106,7 +106,7 @@ const Footer = () => {
               <li className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-amber-600" />
                 <a href="tel:+11234567890" className="text-gray-600 hover:text-amber-600 transition-colors duration-200">
-                  +1 (123) 456-7890
+                  +94 075 294 1767
                 </a>
               </li>
               <li className="flex items-center space-x-3">

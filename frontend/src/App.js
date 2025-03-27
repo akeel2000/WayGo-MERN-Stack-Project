@@ -7,7 +7,6 @@ import AdminLayout from "./components/AdminLayout";
 
 import Home from "./Pages/Home";
 import AdminDashboard from "./Pages/AdminDashboard";
-import UserDashboard from "./Pages/UserDashboard";
 import UserManagement from "./Pages/UserManagement";
 import AdminGuideManagement from "./Pages/AdminGuideManagement";
 import GuideDetails from "./Pages/GuideDetails";
@@ -18,6 +17,8 @@ import RentalVehicles from './Pages/ifaz/RentalVehicleManagment';
 import SignIn from './Pages/SignIn';
 import Register from './Pages/Register';
 import Contact from "./Pages/Contact";
+import Destination from "./Pages/Destination";
+import Blog from "./Pages/Blog";
 
 
 function App() {
@@ -30,11 +31,11 @@ function App() {
       <Route path="/services/guide" element={<PublicLayout><GuideList /></PublicLayout>} />
       <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
       <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
-
-
+      <Route path="/blog" element={<PublicLayout><Blog /></PublicLayout>} />
+      <Route path="/destinations" element={<PublicLayout><Destination /></PublicLayout>} />
 
       {/* Protected Routes for Users */}
-      <Route path="/user-dashboard" element={<ProtectedRoute><PublicLayout><UserDashboard /></PublicLayout></ProtectedRoute>} />
+      <Route path="/Home" element={<ProtectedRoute><PublicLayout><Home /></PublicLayout></ProtectedRoute>} />
 
       <Route path="/guide/:id" element={<PublicLayout><GuideDetails /></PublicLayout>} />
 

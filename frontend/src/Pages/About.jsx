@@ -5,23 +5,23 @@ const About = () => {
   return (
     <div className="pt-32 md:pt-24 bg-gradient-to-b from-amber-50 to-white text-gray-800">
       {/* Hero Section */}
-<section
-  className="relative text-center py-16 px-4 overflow-hidden"
-  style={{
-    backgroundImage: `linear-gradient(rgba(245, 158, 11, 0.6), rgba(245, 158, 11, 0.6)), url(https://images.unsplash.com/photo-1505832018823-50331d70d237?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80)`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  }}
->
-  <div className="max-w-4xl mx-auto relative z-10">
-    <h1 className="text-5xl font-bold text-white mb-4">Contact Us</h1>
-    <p className="text-xl text-amber-100 max-w-2xl mx-auto">
-      Have questions or need assistance? Get in touch with us using the details below or send us a message.
-    </p>
-  </div>
-</section>
+      <section
+        className="relative text-center py-16 px-4 overflow-hidden"
+        style={{
+          backgroundImage: `linear-gradient(rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.2)), url(https://images.unsplash.com/photo-1505832018823-50331d70d237?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="max-w-4xl mx-auto relative z-10">
+          <h1 className="text-5xl font-bold text-white mb-4">About WayGo</h1>
+          <p className="text-xl text-amber-100 max-w-2xl mx-auto">
+            Discover the story behind WayGo, our mission, and the values that drive us to create unforgettable travel experiences.
+          </p>
+        </div>
+      </section>
 
-      {/* Our Story Section */}
+            {/* Our Story Section */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
