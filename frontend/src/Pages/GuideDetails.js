@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect, useCallback, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { CartContext } from '../context/CartContext'; // ✅ Import CartContext
 
-/** Renders a 5-star display for a numeric rating. */
+// Function to render stars
 function renderStars(rating, className = "") {
   const rounded = Math.round(rating);
   const totalStars = 5;
@@ -14,7 +15,7 @@ function renderStars(rating, className = "") {
   );
 }
 
-/** A simple star-based rating input component for the review form. */
+// Star Rating Input Component
 function StarRatingInput({ value, onChange }) {
   const handleClick = (starValue) => {
     onChange(starValue);
@@ -36,8 +37,11 @@ function StarRatingInput({ value, onChange }) {
   );
 }
 
+// Guide Details Component
 function GuideDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { addToCart } = useContext(CartContext); // ✅ Use context
 
   const [guide, setGuide] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -78,7 +82,6 @@ function GuideDetails() {
     fetchReviews();
   }, [fetchGuide, fetchReviews]);
 
-  // Count how many reviews for each rating 1..5 (for the bar chart)
   const ratingCounts = [0, 0, 0, 0, 0];
   reviews.forEach((rev) => {
     const r = rev.rating;
@@ -87,7 +90,6 @@ function GuideDetails() {
     }
   });
 
-  // Handle review form submission
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -107,53 +109,48 @@ function GuideDetails() {
     }
   };
 
+  // ✅ Add to cart using context
+  const handleAddToCart = () => {
+    const cartItem = {
+      id: guide._id,
+      name: guide.name,
+      price: guide.rentPerDay,
+      type: 'guide',
+      quantity: 1,
+    };
+    addToCart(cartItem);
+    navigate("/cart");
+  };
+
   return (
     <div className="pt-24 p-4 max-w-4xl mx-auto">
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
       {guide ? (
         <div className="space-y-6">
-          {/* GUIDE HEADER */}
-          <div>
-            <h1 className="text-3xl font-bold mb-2">{guide.name}</h1>
-            <p className="mb-2">{guide.about}</p>
-            <p className="mb-2">
-              <strong>Experience:</strong> {guide.experience} years
-            </p>
-            <p className="mb-2">
-              <strong>Location:</strong> {guide.location}
-            </p>
-            <p className="mb-2">
-              <strong>Languages:</strong> {guide.languages.join(", ")}
-            </p>
-            <p className="mb-2">
-              <strong>Available:</strong> {guide.available ? "Yes" : "No"}
-            </p>
+          <h1 className="text-3xl font-bold mb-2">{guide.name}</h1>
+          <p className="mb-2">{guide.about}</p>
+          <p className="mb-2"><strong>Experience:</strong> {guide.experience} years</p>
+          <p className="mb-2"><strong>Location:</strong> {guide.location}</p>
+          <p className="mb-2"><strong>Languages:</strong> {guide.languages.join(", ")}</p>
+          <p className="mb-2"><strong>Available:</strong> {guide.available ? "Yes" : "No"}</p>
+          <p className="mb-2"><strong>Rent Per Day:</strong> Rs{guide.rentPerDay}</p>
 
-            {/* Rent Per Day */}
-            <p className="mb-2">
-              <strong>Rent Per Day:</strong> Rs{guide.rentPerDay}
-            </p>
+          {guide.images && guide.images.length > 0 ? (
+            <img
+              src={`http://localhost:5000${guide.images[0].url}`}
+              alt={guide.name}
+              className="w-full h-64 object-cover mb-4 rounded"
+            />
+          ) : (
+            <img
+              src="https://via.placeholder.com/500x300.png?text=No+Image+Available"
+              alt="No Image Available"
+              className="w-full h-64 object-cover mb-4 rounded"
+            />
+          )}
 
-            {/* Image Display */}
-            {guide.images && guide.images.length > 0 ? (
-              <img
-                src={`http://localhost:5000${guide.images[0].url}`}
-                alt={guide.name}
-                className="w-full h-64 object-cover mb-4 rounded"
-              />
-            ) : (
-              <img
-                src="https://via.placeholder.com/500x300.png?text=No+Image+Available"
-                alt="No Image Available"
-                className="w-full h-64 object-cover mb-4 rounded"
-              />
-            )}
-          </div>
-
-          {/* RATING & DISTRIBUTION */}
           <div className="bg-white rounded shadow p-4 flex flex-col md:flex-row items-center md:items-start md:space-x-6">
-            {/* Big rating display */}
             <div className="text-center mb-4 md:mb-0">
               <p className="text-5xl font-bold text-yellow-500">
                 {guide.rating.toFixed(1)}
@@ -164,7 +161,6 @@ function GuideDetails() {
               </p>
             </div>
 
-            {/* Star distribution bars */}
             <div className="flex-1">
               {[5, 4, 3, 2, 1].map((star) => {
                 const count = ratingCounts[star - 1];
@@ -186,7 +182,7 @@ function GuideDetails() {
             </div>
           </div>
 
-          {/* LIST OF REVIEWS */}
+          {/* Reviews */}
           <div>
             <h2 className="text-2xl font-bold mb-2">Reviews</h2>
             {reviews.length > 0 ? (
@@ -212,7 +208,7 @@ function GuideDetails() {
             )}
           </div>
 
-          {/* ADD A REVIEW FORM */}
+          {/* Add a Review */}
           <div>
             <hr className="my-4" />
             <h2 className="text-2xl font-bold mb-2">Add a Review</h2>
@@ -247,6 +243,14 @@ function GuideDetails() {
               </button>
             </form>
           </div>
+
+          {/* ✅ Book Now Button with context */}
+          <button
+            onClick={handleAddToCart}
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
+          >
+            Book Now
+          </button>
         </div>
       ) : (
         <p>Loading guide details...</p>
@@ -256,3 +260,4 @@ function GuideDetails() {
 }
 
 export default GuideDetails;
+

@@ -50,7 +50,6 @@ function Header() {
 
   const toggleDropdown = (setter, state) => setter(!state);
 
-  // Function to return active link classes based on path
   const navLinkClasses = (path) =>
     `px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
       location.pathname === path
@@ -89,7 +88,7 @@ function Header() {
             About
           </Link>
 
-          {/* Services dropdown inserted here */}
+          {/* Services Dropdown */}
           <div className="relative">
             <button
               onClick={() => toggleDropdown(setIsServicesOpen, isServicesOpen)}
@@ -146,7 +145,7 @@ function Header() {
           </Link>
         </nav>
 
-        {/* User Actions & Auth */}
+        {/* User Actions */}
         <div className="hidden md:flex items-center space-x-4">
           {!user ? (
             <>
@@ -165,12 +164,31 @@ function Header() {
             </>
           ) : (
             <>
+              {/* ✅ Cart Icon (only for logged-in users) */}
+              <Link
+                to="/cart"
+                className="relative px-4 py-2 rounded-full font-medium text-gray-700 hover:text-orange-500 flex items-center"
+                title="View Cart"
+              >
+                <svg
+                  className="w-6 h-6 mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.35 6.55A1 1 0 007 21h10a1 1 0 001-1.45L17 13" />
+                </svg>
+                <span className="text-sm">Cart</span>
+              </Link>
+
               <button
                 onClick={handleLogout}
                 className="px-5 py-2 rounded-full font-medium text-gray-700 hover:text-orange-500"
               >
                 Logout
               </button>
+
               <div className="relative">
                 <button
                   onClick={() => toggleDropdown(setIsProfileOpen, isProfileOpen)}
@@ -210,7 +228,7 @@ function Header() {
           )}
         </div>
 
-        {/* Mobile menu toggle */}
+        {/* Mobile Menu Toggle */}
         <button
           className="md:hidden text-gray-700 hover:text-orange-500"
           onClick={() => toggleDropdown(setIsMobileMenuOpen, isMobileMenuOpen)}

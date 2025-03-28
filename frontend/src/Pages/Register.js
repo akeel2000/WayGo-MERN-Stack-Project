@@ -210,7 +210,7 @@ function Register() {
             Already have an account?{" "}
             <button
               type="button"
-              onClick={() => navigate("/?showLoginModal=true")}
+              onClick={() => navigate("/signin")}
               className="font-medium text-amber-600 hover:text-amber-700 focus:outline-none"
             >
               Log in
