@@ -13,6 +13,7 @@ function AdminGuideManagement() {
     location: "",
     languages: "",
     available: true,
+    rentPerDay: "", // Added rentPerDay to form state
   });
 
   // State for new image files to upload (up to 5)
@@ -90,6 +91,7 @@ function AdminGuideManagement() {
   const handleEdit = async (guide) => {
     const fullGuide = await fetchGuideDetails(guide._id);
     if (!fullGuide) return;
+
     setEditingGuide(fullGuide);
     setFormDataState({
       name: fullGuide.name,
@@ -98,6 +100,7 @@ function AdminGuideManagement() {
       location: fullGuide.location,
       languages: fullGuide.languages.join(", "),
       available: fullGuide.available,
+      rentPerDay: fullGuide.rentPerDay ? fullGuide.rentPerDay.toString() : "", // Safely handle undefined
     });
     setExistingImages(fullGuide.images || []);
     setFilesState([]); // Reset file state on edit
@@ -113,6 +116,7 @@ function AdminGuideManagement() {
       formData.append("location", formDataState.location);
       formData.append("languages", formDataState.languages);
       formData.append("available", formDataState.available);
+      formData.append("rentPerDay", formDataState.rentPerDay); // Add rentPerDay to formData
 
       // Append new image files if any
       filesState.forEach((file) => {
@@ -150,6 +154,7 @@ function AdminGuideManagement() {
         location: "",
         languages: "",
         available: true,
+        rentPerDay: "", // Reset rentPerDay field
       });
       setFilesState([]);
       setExistingImages([]);
@@ -251,6 +256,17 @@ function AdminGuideManagement() {
             onChange={handleInputChange}
           />
         </div>
+        <div>
+          <label className="block">Rent Per Day</label>
+          <input
+            type="number"
+            name="rentPerDay"
+            value={formDataState.rentPerDay}
+            onChange={handleInputChange}
+            required
+            className="border p-2 rounded w-full"
+          />
+        </div>
 
         {/* Existing Images (only when editing) */}
         {editingGuide && existingImages.length > 0 && (
@@ -334,6 +350,7 @@ function AdminGuideManagement() {
               <p className="mb-1"><strong>Location:</strong> {guide.location}</p>
               <p className="mb-1"><strong>Languages:</strong> {guide.languages.join(", ")}</p>
               <p className="mb-1"><strong>Available:</strong> {guide.available ? "Yes" : "No"}</p>
+              <p className="mb-1"><strong>Rent Per Day:</strong> ${guide.rentPerDay}</p>
               <div className="grid grid-cols-2 gap-2 my-2">
                 {guide.images && guide.images.length > 0 && guide.images.map((imgObj, index) => (
                   <img

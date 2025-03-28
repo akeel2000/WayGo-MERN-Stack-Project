@@ -130,6 +130,11 @@ function GuideDetails() {
               <strong>Available:</strong> {guide.available ? "Yes" : "No"}
             </p>
 
+            {/* Rent Per Day */}
+            <p className="mb-2">
+              <strong>Rent Per Day:</strong> Rs{guide.rentPerDay}
+            </p>
+
             {/* Image Display */}
             {guide.images && guide.images.length > 0 ? (
               <img

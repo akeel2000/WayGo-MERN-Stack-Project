@@ -1,7 +1,7 @@
-// controllers/guideController.js
 const Guide = require("../../models/Akeel/Guide"); // Adjust path to your Guide model
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer"); // Add multer for image uploads
 
 // Helper: Delete an image file from disk given its relative URL
 const deleteImageFile = (imageUrl) => {
@@ -15,13 +15,24 @@ const deleteImageFile = (imageUrl) => {
   });
 };
 
+// Configure Multer (files stored in "uploads" folder)
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Adjust path as needed
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
+
 // Create a new guide (Admin Only) with image(s)
 exports.addGuide = async (req, res) => {
   try {
-    const { name, about, experience, location, languages, available } = req.body;
+    const { name, about, experience, location, languages, available, rentPerDay } = req.body;
 
     // Check for required fields
-    if (!name || !about || !experience || !location || !languages) {
+    if (!name || !about || !experience || !location || !languages || !rentPerDay) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -31,7 +42,6 @@ exports.addGuide = async (req, res) => {
     // Convert languages to an array if it's a string
     let languagesArray = languages;
     if (typeof languages === "string") {
-      // e.g., "English, Spanish"
       languagesArray = languages.split(",").map((lang) => lang.trim());
     }
 
@@ -44,6 +54,7 @@ exports.addGuide = async (req, res) => {
       }));
     }
 
+    // Create the guide
     const guide = await Guide.create({
       name,
       about,
@@ -52,6 +63,7 @@ exports.addGuide = async (req, res) => {
       languages: languagesArray,
       available: available === "true" || available === true, // convert string to boolean
       images,
+      rentPerDay: Number(rentPerDay), // Save rentPerDay here
     });
 
     res.status(201).json({ message: "Guide added successfully", guide });
@@ -101,9 +113,7 @@ exports.updateGuide = async (req, res) => {
     guide.available = req.body.available === "true" || req.body.available === true
       ? true
       : false;
-
-    // If you are implementing "keptImages", you'd parse it here. 
-    // Otherwise, we'll assume we replace all old images with new images.
+    guide.rentPerDay = req.body.rentPerDay ? Number(req.body.rentPerDay) : guide.rentPerDay; // Update rentPerDay if provided
 
     // Process new images
     let newImages = [];
@@ -147,7 +157,6 @@ exports.deleteGuide = async (req, res) => {
   }
 };
 
-
 // Add a review (Users, Admins, or Guests)
 exports.addReview = async (req, res) => {
   try {
@@ -159,9 +168,8 @@ exports.addReview = async (req, res) => {
       user: req.user ? req.user.id : null,
       name: req.user ? req.user.name : "Guest",
       rating: Number(rating),
-      comment
+      comment,
     };
-    
 
     guide.reviews.push(review);
     // Calculate new average rating
@@ -175,7 +183,6 @@ exports.addReview = async (req, res) => {
   }
 };
 
-
 // Get reviews for a guide
 exports.getReviews = async (req, res) => {
   try {
@@ -186,3 +193,6 @@ exports.getReviews = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch reviews", error: error.message });
   }
 };
+
+// Middleware to handle image uploads
+exports.uploadImages = upload.array("images", 5); // To handle multiple image uploads up to 5 images
