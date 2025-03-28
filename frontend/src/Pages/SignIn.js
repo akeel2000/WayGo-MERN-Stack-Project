@@ -164,12 +164,7 @@ function SignIn() {
                 Remember me
               </label>
             </div>
-            <button
-              type="button"
-              className="text-sm font-medium text-amber-600 hover:text-amber-500 focus:outline-none"
-            >
-              Forgot password?
-            </button>
+
           </div>
 
           {/* Submit Button */}
