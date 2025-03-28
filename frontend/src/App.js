@@ -50,10 +50,10 @@ function App() {
       <Route path="/blog/:id" element={<PublicLayout><BlogRead /></PublicLayout>} />
       <Route path="/destinations" element={<PublicLayout><Destination /></PublicLayout>} />
       <Route path="/destination/:id" element={<PublicLayout><DestinationView /></PublicLayout>} />
-
-
-
-
+      <Route path="/tour-packages" element={<PublicLayout><Destination /></PublicLayout>} />
+      <Route path="/hotel-booking" element={<PublicLayout><HotelList /></PublicLayout>} />
+      <Route path="/services/guide" element={<PublicLayout><GuideDetails /></PublicLayout>} />
+      <Route path="/services/car-rental" element={<PublicLayout><RentalVehicles /></PublicLayout>} />
       <Route path="/services/hotel-booking" element={<PublicLayout><HotelList /></PublicLayout>} />
       <Route path="/hotel/:id" element={<PublicLayout><HotelDetails /></PublicLayout>} />
 
@@ -65,7 +65,7 @@ function App() {
 
 
       <Route path="/cart" element={<PublicLayout><CartPage /></PublicLayout>} />
-<Route path="/success" element={<PublicLayout><SuccessPage /></PublicLayout>} />
+      <Route path="/success" element={<PublicLayout><SuccessPage /></PublicLayout>} />
 
 
 

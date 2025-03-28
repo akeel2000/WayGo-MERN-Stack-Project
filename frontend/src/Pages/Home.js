@@ -1,37 +1,39 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
 const WayGoHomepage = () => {
   const navigate = useNavigate();
-
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  // Service data with online icons - now with images like destinations
+  // Data: Services offered by WayGo with corresponding routes
   const services = [
     {
       name: 'Tour Packages',
       image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      description: 'Curated experiences across Sri Lanka with expert planning'
+      description: 'Curated experiences across Sri Lanka with expert planning',
+      route: '/destinations'
     },
     {
       name: 'Hotel Booking',
       image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      description: 'Best rates for luxury resorts to budget stays island-wide'
+      description: 'Best rates for luxury resorts to budget stays island-wide',
+      route: '/hotel-booking'
     },
     {
       name: 'Guided Tours',
       image: 'https://images.unsplash.com/photo-1501555088652-021faa106b9b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80',
-      description: 'Knowledgeable local guides for immersive cultural experiences'
+      description: 'Knowledgeable local guides for immersive cultural experiences',
+      route: '/services/guide'
     },
     {
       name: 'Vehicle Rental',
       image: 'https://images.unsplash.com/photo-1494905998402-395d579af36f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-      description: 'Reliable transportation options with professional drivers'
+      description: 'Reliable transportation options with professional drivers',
+      route: '/services/car-rental'
     }
   ];
 
-  // Destination data with online images
+  // Data: Popular destinations in Sri Lanka
   const destinations = [
     {
       name: 'Sigiriya',
@@ -55,6 +57,7 @@ const WayGoHomepage = () => {
     }
   ];
 
+  // Data: Testimonials from travelers
   const testimonials = [
     {
       name: 'Sarah Johnson',
@@ -76,6 +79,7 @@ const WayGoHomepage = () => {
     }
   ];
 
+  // Handlers for navigating testimonials
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
   };
@@ -84,85 +88,94 @@ const WayGoHomepage = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
+  // Handler for service card click
+  const handleServiceClick = (route) => {
+    navigate(route);
+  };
+
   return (
-    <div className="font-sans text-gray-800">
-      {/* Hero Section */}
-      <section className="relative h-screen min-h-[600px] max-h-[800px] flex items-center justify-center">
-        {/* Background image with overlay */}
-        <div className="absolute inset-0 bg-black/30 z-0">
-          <img
-            src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
-            alt="Sri Lanka beach"
+    <div className="font-sans text-gray-800 antialiased">
+      {/* Hero Section: Video background with call-to-action buttons */}
+      <section className="relative h-screen max-h-[900px] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-black/40 z-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
             className="w-full h-full object-cover"
-            loading="eager"
-          />
+            poster="https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+          >
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-beach-5016-large.mp4" type="video/mp4" />
+          </video>
         </div>
 
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
-            Discover Sri Lanka with <span className="text-amber-400">WayGo</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-white mb-8 max-w-3xl mx-auto drop-shadow-md">
-            Your trusted partner for unforgettable Sri Lankan experiences
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            {/* Navigate to Destinations Page */}
-            <button
-              onClick={() => navigate('/destinations')}
-              className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-full font-semibold text-lg shadow-lg transition-all"
-            >
-              Explore Tours
-            </button>
-            {/* Navigate to Blog Page */}
-            <button
-              onClick={() => navigate('/blog')}
-              className="bg-white/90 hover:bg-white text-amber-600 px-8 py-3 rounded-full font-semibold text-lg shadow-lg transition-all"
-            >
-              Blog
-            </button>
+        <div className="container mx-auto px-6 text-center relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+              Discover <span className="text-amber-400">Sri Lanka</span> Differently
+            </h1>
+            <p className="text-xl md:text-2xl text-white/90 mb-10 max-w-2xl mx-auto font-light">
+              Authentic experiences crafted by local experts
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => navigate('/destinations')}
+                className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-full font-semibold text-lg shadow-lg transition-all transform hover:scale-105"
+              >
+                Explore Tours
+              </button>
+              <button
+                onClick={() => navigate('/blog')}
+                className="bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white border border-white/30 px-8 py-4 rounded-full font-semibold text-lg transition-all transform hover:scale-105"
+              >
+                Travel Stories
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-          </svg>
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <div className="w-10 h-16 rounded-3xl border-4 border-white/50 flex justify-center p-1">
+            <div className="w-2 h-2 rounded-full bg-white/80 animate-scroll"></div>
+          </div>
         </div>
       </section>
 
-      {/* Services Grid Section - Similar to Destinations */}
-      <section className="py-16 bg-amber-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-amber-600 font-semibold">OUR SERVICES</span>
-            <h2 className="text-3xl font-bold mt-2 text-gray-800">Travel Solutions</h2>
-            <div className="w-20 h-1 bg-amber-500 mx-auto mt-4"></div>
+      {/* Services Section: Displaying services in a modern card grid */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <span className="text-sm uppercase tracking-widest text-amber-600 font-medium">Our Services</span>
+            <h2 className="text-4xl font-bold mt-4 text-gray-900">Tailored Travel Experiences</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mx-auto mt-6"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {services.map((service, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all group"
+                onClick={() => handleServiceClick(service.route)}
+                className="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-500 cursor-pointer"
               >
-                <div className="relative overflow-hidden h-60">
+                <div className="relative h-64 overflow-hidden">
                   <img
                     src={service.image}
                     alt={service.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 p-6">
-                    <h3 className="text-xl font-bold text-white">{service.name}</h3>
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                 </div>
-                <div className="p-6">
-                  <p className="text-gray-600 mb-4">{service.description}</p>
-                  <button className="w-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                    Learn More
-                  </button>
+                <div className="absolute bottom-0 left-0 w-full p-6">
+                  <h3 className="text-xl font-bold text-white mb-2">{service.name}</h3>
+                  <p className="text-white/90 text-sm mb-4">{service.description}</p>
+                  <div className="text-amber-400 hover:text-amber-300 font-medium text-sm flex items-center group">
+                    Learn more
+                    <svg className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                  </div>
                 </div>
               </div>
             ))}
@@ -170,126 +183,143 @@ const WayGoHomepage = () => {
         </div>
       </section>
 
-      {/* Popular Destinations */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-amber-600 font-semibold">EXPLORE SRI LANKA</span>
-            <h2 className="text-3xl font-bold mt-2 text-gray-800">Popular Destinations</h2>
-            <div className="w-20 h-1 bg-amber-500 mx-auto mt-4"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {destinations.map((destination, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all group"
+      {/* Destinations Section: Highlighting must-visit destinations */}
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col lg:flex-row items-center mb-16">
+            <div className="lg:w-1/2 lg:pr-12 mb-10 lg:mb-0">
+              <span className="text-sm uppercase tracking-widest text-amber-600 font-medium">Explore</span>
+              <h2 className="text-4xl font-bold mt-4 text-gray-900">Must-Visit Destinations</h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mt-6 mb-8"></div>
+              <p className="text-gray-600 mb-8">
+                From the awe-inspiring ancient cities rich with history to the pristine, sun-drenched beaches that stretch endlessly, embark on the ultimate journey across Sri Lanka’s most breathtaking landscapes. Experience the magic of this tropical paradise with our expertly curated tours, designed to immerse you in its vibrant culture, stunning natural beauty, and hidden wonders at every turn.
+              </p>
+              <button
+                onClick={() => navigate('/destinations')}
+                className="inline-flex items-center text-amber-600 hover:text-amber-700 font-medium"
               >
-                <div className="relative overflow-hidden h-60">
+                View all destinations
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </button>
+            </div>
+            <div className="lg:w-1/2 grid grid-cols-2 gap-6">
+              {destinations.slice(0, 2).map((destination, index) => (
+                <div
+                  key={index}
+                  className="relative group overflow-hidden rounded-xl aspect-square cursor-pointer"
+                  onClick={() => navigate('/destinations')}
+                >
                   <img
                     src={destination.image}
                     alt={destination.name}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 p-6">
                     <h3 className="text-xl font-bold text-white">{destination.name}</h3>
-                    <div className="flex items-center mt-1">
-                      <svg className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                      </svg>
-                      <span className="text-white text-sm ml-1">4.8 (120)</span>
-                    </div>
+                    <p className="text-white/90 text-sm mt-1">{destination.description}</p>
                   </div>
                 </div>
-                <div className="p-6">
-                  <p className="text-gray-600 mb-4">{destination.description}</p>
-                  <button className="w-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
-                    View Packages
-                  </button>
+              ))}
+              {destinations.slice(2, 4).map((destination, index) => (
+                <div
+                  key={index + 2}
+                  className="relative group overflow-hidden rounded-xl aspect-square cursor-pointer"
+                  onClick={() => navigate('/destinations')}
+                >
+                  <img
+                    src={destination.image}
+                    alt={destination.name}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                  <div className="absolute bottom-0 left-0 p-6">
+                    <h3 className="text-xl font-bold text-white">{destination.name}</h3>
+                    <p className="text-white/90 text-sm mt-1">{destination.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <button className="border border-amber-600 text-amber-600 hover:bg-amber-50 px-8 py-3 rounded-full font-semibold transition-colors">
-              View All Destinations
-            </button>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section className="py-16 bg-amber-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <span className="text-amber-600 font-semibold">TRAVELER STORIES</span>
-            <h2 className="text-3xl font-bold mt-2 text-gray-800">What Our Guests Say</h2>
-            <div className="w-20 h-1 bg-amber-500 mx-auto mt-4"></div>
+      {/* Testimonials Section: Carousel for traveler reviews */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <span className="text-sm uppercase tracking-widest text-amber-600 font-medium">Testimonials</span>
+            <h2 className="text-4xl font-bold mt-4 text-gray-900">Travelers Share Their Stories</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-amber-600 mx-auto mt-6"></div>
           </div>
 
-          <div className="max-w-4xl mx-auto relative">
-            <div className="bg-white p-8 rounded-xl shadow-md relative">
-              <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full overflow-hidden border-4 border-white shadow-md">
-                <img
-                  src={testimonials[currentTestimonial].avatar}
-                  alt={testimonials[currentTestimonial].name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+          <div className="max-w-5xl mx-auto relative">
+            <div className="bg-gradient-to-br from-amber-50 to-white p-10 rounded-3xl shadow-xl">
+              <div className="flex flex-col md:flex-row items-center">
+                <div className="md:w-1/3 mb-8 md:mb-0 flex justify-center">
+                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                    <img
+                      src={testimonials[currentTestimonial].avatar}
+                      alt={testimonials[currentTestimonial].name}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <div className="md:w-2/3 md:pl-10">
+                  <div className="flex justify-center md:justify-start mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <svg
+                        key={i}
+                        className={`w-6 h-6 ${i < testimonials[currentTestimonial].rating ? 'text-amber-500' : 'text-gray-300'}`}
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                      </svg>
+                    ))}
+                  </div>
+                  <blockquote className="text-xl italic text-gray-700 mb-6 text-center md:text-left">
+                    "{testimonials[currentTestimonial].comment}"
+                  </blockquote>
+                  <p className="font-semibold text-gray-900 text-center md:text-left">
+                    {testimonials[currentTestimonial].name}
+                  </p>
+                </div>
               </div>
+            </div>
 
-              <div className="flex justify-center mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <svg
-                    key={i}
-                    className={`w-6 h-6 ${i < testimonials[currentTestimonial].rating ? 'text-amber-500' : 'text-gray-300'}`}
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                  </svg>
-                ))}
-              </div>
-
-              <p className="text-lg text-center italic mb-6 text-gray-700">
-                "{testimonials[currentTestimonial].comment}"
-              </p>
-
-              <p className="text-center font-semibold text-gray-800">
-                {testimonials[currentTestimonial].name}
-              </p>
-
-              <div className="flex justify-center mt-2">
-                {testimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentTestimonial(index)}
-                    className={`w-2 h-2 mx-1 rounded-full ${index === currentTestimonial ? 'bg-amber-600' : 'bg-gray-300'}`}
-                    aria-label={`Go to testimonial ${index + 1}`}
-                  ></button>
-                ))}
-              </div>
+            <div className="flex justify-center mt-8 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all ${index === currentTestimonial ? 'bg-amber-600 w-6' : 'bg-gray-300'}`}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                ></button>
+              ))}
             </div>
 
             <button
               onClick={prevTestimonial}
-              className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 bg-white p-3 rounded-full shadow-md hover:bg-amber-100 transition-colors"
+              className="hidden md:block absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 bg-white p-4 rounded-full shadow-lg hover:bg-amber-50 transition-colors"
               aria-label="Previous testimonial"
             >
-              <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path>
               </svg>
             </button>
 
             <button
               onClick={nextTestimonial}
-              className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 bg-white p-3 rounded-full shadow-md hover:bg-amber-100 transition-colors"
+              className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 bg-white p-4 rounded-full shadow-lg hover:bg-amber-50 transition-colors"
               aria-label="Next testimonial"
             >
-              <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
               </svg>
             </button>
@@ -297,53 +327,75 @@ const WayGoHomepage = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative py-20 bg-gradient-to-r from-amber-500 to-orange-500 overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-10">
-          <div className="absolute top-20 left-20 w-40 h-40 rounded-full bg-white"></div>
-          <div className="absolute bottom-10 right-20 w-60 h-60 rounded-full bg-white"></div>
-        </div>
-
-        <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to explore Sri Lanka?</h2>
-          <p className="text-xl text-white mb-8 max-w-2xl mx-auto">
-            Book your dream vacation today with WayGo's expert travel planners
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-amber-600 hover:bg-amber-50 px-8 py-4 rounded-full font-semibold text-lg shadow-lg transition-all">
-              Book Your Trip Now
-            </button>
-            <button className="bg-transparent border-2 border-white text-white hover:bg-white/10 px-8 py-4 rounded-full font-semibold text-lg transition-all">
-              Contact Our Experts
-            </button>
+      {/* Stats Section: Displaying key statistics */}
+      <section className="py-16 bg-amber-600 text-white">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div className="p-6">
+              <div className="text-4xl font-bold mb-2">10K+</div>
+              <div className="text-sm uppercase tracking-widest">Happy Travelers</div>
+            </div>
+            <div className="p-6">
+              <div className="text-4xl font-bold mb-2">200+</div>
+              <div className="text-sm uppercase tracking-widest">Tour Packages</div>
+            </div>
+            <div className="p-6">
+              <div className="text-4xl font-bold mb-2">50+</div>
+              <div className="text-sm uppercase tracking-widest">Local Guides</div>
+            </div>
+            <div className="p-6">
+              <div className="text-4xl font-bold mb-2">15</div>
+              <div className="text-sm uppercase tracking-widest">Years Experience</div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Newsletter Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto bg-amber-50 rounded-xl p-8 md:p-12 shadow-md">
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-bold text-gray-800 mb-2">Get Travel Inspiration</h3>
-              <p className="text-gray-600">Subscribe to our newsletter for exclusive offers and travel tips</p>
-            </div>
-
-            <form className="flex flex-col sm:flex-row gap-4">
-              <input
-                type="email"
-                placeholder="Your email address"
-                className="flex-grow px-4 py-3 rounded-lg border border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500"
-                required
-              />
+      {/* CTA Section: Split background with contact and subscription options */}
+      <section className="relative">
+        <div className="absolute inset-0 bg-amber-600"></div>
+        <div className="absolute inset-0 bg-amber-600 w-1/2"></div>
+        <div className="container mx-auto px-6 relative">
+          <div className="flex flex-col lg:flex-row">
+            <div className="lg:w-1/2 py-20 lg:py-32 px-6 lg:pr-12 text-white">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to explore Sri Lanka?</h2>
+              <p className="text-lg mb-8 opacity-90">
+                Our travel experts are ready to craft your perfect itinerary. Get in touch today.
+              </p>
               <button
-                type="submit"
-                className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+                onClick={() => navigate('/contact')}
+                className="bg-white text-amber-600 hover:bg-gray-100 px-8 py-4 rounded-full font-semibold text-lg shadow-lg transition-all transform hover:scale-105"
               >
-                Subscribe
+                Contact Our Experts
               </button>
-            </form>
+            </div>
+            <div className="lg:w-1/2 py-20 lg:py-32 px-6 lg:pl-12 text-white bg-gray-900 bg-opacity-90 lg:bg-transparent">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Get Exclusive Offers</h2>
+              <p className="text-lg mb-8 opacity-90">
+                Subscribe to our newsletter for special deals and travel inspiration.
+              </p>
+              <form className="flex flex-col sm:flex-row gap-4">
+                <div className="relative flex-grow">
+                  <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
+                    <svg className="w-5 h-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                  </div>
+                  <input
+                    type="email"
+                    placeholder="Your email address"
+                    className="w-full pl-12 pr-6 py-4 rounded-full bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-amber-400 text-white placeholder-white/60 transition-all duration-200 hover:bg-white/15"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="bg-white text-amber-600 hover:bg-gray-100 px-8 py-4 rounded-full font-semibold text-lg shadow-lg transition-all transform hover:scale-105"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </section>
