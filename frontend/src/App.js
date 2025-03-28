@@ -21,6 +21,7 @@ import Blog from "./Pages/Blog";
 import UserRentalVehicles from "./Pages/ifaz/UserRentalVehicles";
 import RentalVehicleDetails from "./Pages/ifaz/RentalVehicleDetails";
 import BlogRead from "./Pages/BlogRead";
+import DestinationView from "./Pages/BlogRead";
 
 function App() {
   return (
@@ -34,8 +35,9 @@ function App() {
       <Route path="/about" element={<PublicLayout><About /></PublicLayout>} />
       <Route path="/contact" element={<PublicLayout><Contact /></PublicLayout>} />
       <Route path="/blog" element={<PublicLayout><Blog /></PublicLayout>} />
-      <Route path="/destinations" element={<PublicLayout><Destination /></PublicLayout>} />
       <Route path="/blog/:id" element={<PublicLayout><BlogRead /></PublicLayout>} />
+      <Route path="/destinations" element={<PublicLayout><Destination /></PublicLayout>} />
+      <Route path="/destinations/:id" element={<PublicLayout><DestinationView /></PublicLayout>} />
 
       {/* Additional User Routes */}
       <Route path="/rental-vehicles" element={<PublicLayout><UserRentalVehicles /></PublicLayout>} />
