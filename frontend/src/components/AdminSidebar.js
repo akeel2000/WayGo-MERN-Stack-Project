@@ -118,6 +118,12 @@ function AdminSidebar() {
           >
             {isCollapsed ? "P" : "View Bookings"}
           </Link>
+          <Link
+  to="/admin/card-management"
+  className="block p-2 hover:bg-gray-700 rounded"
+>
+  {isCollapsed ? "C" : "Card Management"}
+</Link>
         </nav>
 
         <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">

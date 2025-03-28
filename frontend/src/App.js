@@ -33,6 +33,13 @@ import AdminHotelManagement from "./Pages/risi/AdminHotelManagement";
 import HotelList from "./Pages/risi/HotelList";
 import HotelDetails from "./Pages/risi/HotelDetails";
 
+import CardEntry from "./Pages/shajeeh/CardEntry"; 
+
+
+import AdminCardManagement from './Pages/shajeeh/AdminCardManagement';
+
+import UserCards from './Pages/shajeeh/UserCards'; 
+
 
 
 function App() {
@@ -56,6 +63,12 @@ function App() {
       <Route path="/services/car-rental" element={<PublicLayout><RentalVehicles /></PublicLayout>} />
       <Route path="/services/hotel-booking" element={<PublicLayout><HotelList /></PublicLayout>} />
       <Route path="/hotel/:id" element={<PublicLayout><HotelDetails /></PublicLayout>} />
+      <Route path="/card-entry" element={<PublicLayout><CardEntry /></PublicLayout>} />
+
+
+
+<Route path="/user-cards" element={<PublicLayout><UserCards /></PublicLayout>} />
+
 
 
       {/* Additional User Routes */}
@@ -70,6 +83,14 @@ function App() {
 
 
 
+      <Route
+  path="/admin/card-management"
+  element={
+    <ProtectedRoute requiredRole="admin">
+      <AdminLayout><AdminCardManagement /></AdminLayout>
+    </ProtectedRoute>
+  }
+/>
 
 
 

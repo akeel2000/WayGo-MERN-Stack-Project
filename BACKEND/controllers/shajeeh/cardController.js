@@ -1,74 +1,66 @@
-const Cart = require("../models/Cart");
-const Guide = require("../models/Guide");
+const Card = require('../../models/shajeeh/card');
 
-exports.addToCart = async (req, res) => {
+
+// CREATE
+exports.createCard = async (req, res) => {
   try {
-    const { guideId, rentalDays } = req.body;
-
-    const guide = await Guide.findById(guideId);
-    if (!guide) return res.status(404).send("Guide not found.");
-
-    const totalPrice = guide.perDayAmount * rentalDays;
-
-    const newCartItem = {
-      guide: guide._id,
-      rentalDays,
-      totalPrice,
-    };
-
-    const userCart = await Cart.findOne({ user: req.user.id });
-
-    if (!userCart) {
-      const newCart = new Cart({
-        user: req.user.id,
-        items: [newCartItem],
-      });
-      await newCart.save();
-      return res.status(201).send("Guide added to your cart!");
-    } else {
-      userCart.items.push(newCartItem);
-      await userCart.save();
-      return res.status(200).send("Guide added to your cart!");
-    }
+    const { cardHolderName, cardNumber, expiryDate, cvv } = req.body;
+    const newCard = new Card({
+      userId: req.user.id,
+      cardHolderName,
+      cardNumber,
+      expiryDate,
+      cvv
+    });
+    await newCard.save();
+    res.status(201).json({ message: "Card added", card: newCard });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error adding guide to cart.");
+    res.status(500).json({ message: "Error adding card", error: err.message });
   }
 };
 
-exports.viewCart = async (req, res) => {
+// READ: Get cards of the logged-in user
+exports.getMyCards = async (req, res) => {
   try {
-    const userCart = await Cart.findOne({ user: req.user.id }).populate(
-      "items.guide"
+    const cards = await Card.find({ userId: req.user.id });
+    res.json(cards);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching cards", error: err.message });
+  }
+};
+
+// READ: Admin get all cards
+exports.getAllCards = async (req, res) => {
+  try {
+    const cards = await Card.find().populate('userId');
+    res.json(cards);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching all cards", error: err.message });
+  }
+};
+
+// UPDATE
+exports.updateCard = async (req, res) => {
+  try {
+    const card = await Card.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
+      req.body,
+      { new: true }
     );
-    if (!userCart || userCart.items.length === 0) {
-      return res.status(404).send("Your cart is empty.");
-    }
-    res.json(userCart);
+    if (!card) return res.status(404).json({ message: "Card not found" });
+    res.json({ message: "Card updated", card });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error fetching cart details.");
+    res.status(500).json({ message: "Error updating card", error: err.message });
   }
 };
 
-exports.removeFromCart = async (req, res) => {
+// DELETE
+exports.deleteCard = async (req, res) => {
   try {
-    const { id } = req.params;
-    const userCart = await Cart.findOne({ user: req.user.id });
-    if (!userCart) {
-      return res.status(404).send("Cart not found.");
-    }
-
-    const itemIndex = userCart.items.findIndex((item) => item.guide.toString() === id);
-    if (itemIndex === -1) {
-      return res.status(404).send("Item not found in your cart.");
-    }
-
-    userCart.items.splice(itemIndex, 1); // Remove item from cart
-    await userCart.save();
-    res.status(200).send("Item removed from cart.");
+    const card = await Card.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
+    if (!card) return res.status(404).json({ message: "Card not found" });
+    res.json({ message: "Card deleted" });
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Error removing item from cart.");
+    res.status(500).json({ message: "Error deleting card", error: err.message });
   }
 };

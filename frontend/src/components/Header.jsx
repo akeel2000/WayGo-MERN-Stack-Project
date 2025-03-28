@@ -197,32 +197,40 @@ function Header() {
                 >
                   {user.name?.charAt(0).toUpperCase() || "U"}
                 </button>
-
                 {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-100 shadow-xl rounded-lg z-50">
-                    <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-amber-50 to-amber-100">
-                      <p className="font-bold text-gray-800">
-                        {user.name || "User"}
-                      </p>
-                      <p className="text-sm text-gray-600">{user.email}</p>
-                    </div>
-                    <div className="p-4">
-                      <p className="text-xs text-gray-500 mb-2">ID: {user.id}</p>
-                      <p className="text-sm text-gray-700 mb-1">
-                        Role:{" "}
-                        <span className="font-medium text-amber-600">
-                          {user.role}
-                        </span>
-                      </p>
-                    </div>
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600"
-                    >
-                      Sign out
-                    </button>
-                  </div>
-                )}
+  <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-100 shadow-xl rounded-lg z-50">
+    <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-amber-50 to-amber-100">
+      <p className="font-bold text-gray-800">
+        {user.name || "User"}
+      </p>
+      <p className="text-sm text-gray-600">{user.email}</p>
+    </div>
+    <div className="p-4">
+      <p className="text-xs text-gray-500 mb-2">ID: {user.id}</p>
+      <p className="text-sm text-gray-700 mb-1">
+        Role:{" "}
+        <span className="font-medium text-amber-600">{user.role}</span>
+      </p>
+    </div>
+
+    {/* ✅ New Button to Card Details */}
+    <button
+      onClick={() => navigate('/user-cards')}
+      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600"
+    >
+      💳 Card Details
+    </button>
+
+    {/* Logout Button */}
+    <button
+      onClick={handleLogout}
+      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600"
+    >
+      Logout
+    </button>
+  </div>
+)}
+
               </div>
             </>
           )}

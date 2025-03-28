@@ -1,8 +1,8 @@
-require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
+require("dotenv").config();
 
 const authRoutes = require("./routes/Akeel/authRoutes");
 const adminRoutes = require("./routes/Akeel/adminRoutes");
@@ -12,8 +12,10 @@ const userManagementRoutes = require("./routes/Akeel/userManagementRoutes");
 const hotelRoutes = require("./routes/risi/hotelRoute");
 const rentalVehicleRoutes = require("./routes/Ifaz/RentalVehicleRoutes");
 const cartRoutes = require("./routes/shajeeh/cartRoutes");
+const cardRoutes = require("./routes/shajeeh/cardRoutes");
 
-// ✅ Initialize app before using it
+
+
 const app = express();
 
 // Middleware
@@ -38,6 +40,7 @@ app.use("/api/admin/users", userManagementRoutes);
 app.use("/api/hotels", hotelRoutes);
 app.use("/api/rentalVehicles", rentalVehicleRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/cards", cardRoutes); // ✅ Add this line
 
 // MongoDB Connection
 mongoose
