@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-
 const ImageSchema = new mongoose.Schema({
   url: { type: String },
   contentType: { type: String },
@@ -12,7 +11,7 @@ const ReviewSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     name: { type: String, required: true },
     rating: { type: Number, required: true, min: 1, max: 5 },
-    comment: { type: String, required: true }
+    comment: { type: String, required: true },
   },
   { timestamps: true }
 );
@@ -27,9 +26,10 @@ const GuideSchema = new mongoose.Schema(
     languages: { type: [String], required: true },
     available: { type: Boolean, default: true },
     rating: { type: Number, default: 0 }, // average rating
-    reviews: [ReviewSchema]
+    reviews: [ReviewSchema],
+    rentPerDay: { type: Number, required: true }, // Add rent per day field
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Guide", GuideSchema);
+module.exports = mongoose.model("Guide", GuideSchema); // Export the Guide model

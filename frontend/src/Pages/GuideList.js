@@ -128,6 +128,14 @@ function GuideList() {
                   </div>
                 </div>
 
+                {/* Rent Per Day */}
+                <div className="text-sm text-gray-600">
+                  <strong>Rent per Day: </strong>
+                  <span className="font-semibold text-amber-600">
+                    Rs{guide.rentPerDay}
+                  </span>
+                </div>
+
                 <Link
                   to={`/guide/${guide._id}`}
                   className="mt-6 inline-flex items-center justify-center w-full py-2 px-4 bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-white font-medium rounded-lg transition-all duration-300 shadow-sm hover:shadow-md"
