@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  FiHome,
+  FiUsers,
+  FiMap,
+  FiTruck,
+  FiBriefcase,
+  FiCalendar,
+  FiCreditCard,
+  FiLogOut,
+  FiChevronLeft,
+  FiChevronRight
+} from "react-icons/fi";
 
 function AdminSidebar() {
   const navigate = useNavigate();
   const [admin, setAdmin] = useState(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [activeItem, setActiveItem] = useState("dashboard");
 
   useEffect(() => {
     fetch("http://localhost:5000/api/auth/isLoggedIn", {
@@ -45,100 +58,95 @@ function AdminSidebar() {
     setIsCollapsed(!isCollapsed);
   };
 
+  const navItems = [
+    { path: "/admin-dashboard", icon: <FiHome size={20} />, label: "Dashboard", key: "dashboard" },
+    { path: "/admin/user-management", icon: <FiUsers size={20} />, label: "User Management", key: "users" },
+    { path: "/admin/guide-management", icon: <FiMap size={20} />, label: "Guide Management", key: "guides" },
+    { path: "/admin/rent-car-management", icon: <FiTruck size={20} />, label: "Rent Car Management", key: "cars" },
+    { path: "/admin/hotel-booking-management", icon: <FiBriefcase size={20} />, label: "Hotel Management", key: "hotels" },
+    { path: "/admin/view-bookings", icon: <FiCalendar size={20} />, label: "View Bookings", key: "bookings" },
+    { path: "/admin/card-management", icon: <FiCreditCard size={20} />, label: "Card Management", key: "cards" }
+  ];
+
   return (
-    <div className="flex">
-      {/* Sidebar */}
+    <div className="flex h-screen">
+      {/* Sidebar with amber/orange color scheme */}
       <aside
-        className={`bg-gray-800 text-white min-h-screen transition-all duration-300 ${
-          isCollapsed ? "w-16" : "w-64"
-        } relative`}
+        className={`bg-gradient-to-b from-amber-50 to-amber-100 text-gray-800 transition-all duration-300 ease-in-out ${isCollapsed ? "w-20" : "w-64"
+          } flex flex-col shadow-xl border-r border-amber-200`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-amber-200">
           {!isCollapsed && (
-            <span className="text-xl font-bold">Admin Panel</span>
+            <span className="text-xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+              Admin Portal
+            </span>
           )}
-          <button onClick={toggleCollapse} className="focus:outline-none">
-            {isCollapsed ? ">>" : "<<"}
+          <button
+            onClick={toggleCollapse}
+            className="p-2 rounded-full hover:bg-amber-200 transition-colors focus:outline-none text-amber-600"
+          >
+            {isCollapsed ? <FiChevronRight size={20} /> : <FiChevronLeft size={20} />}
           </button>
         </div>
 
-        <div className="p-4 border-b border-gray-700">
+        {/* Admin Profile */}
+        <div className="p-4 border-b border-amber-200">
           {admin ? (
-            <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center text-white font-bold">
                 {admin.name ? admin.name.charAt(0).toUpperCase() : "A"}
               </div>
               {!isCollapsed && (
-                <div>
-                  <p className="font-semibold">{admin.name}</p>
-                  <p className="text-sm text-gray-300">{admin.role}</p>
+                <div className="overflow-hidden">
+                  <p className="font-semibold truncate">{admin.name}</p>
+                  <p className="text-xs text-amber-600 capitalize">{admin.role}</p>
                 </div>
               )}
             </div>
           ) : (
-            <p className="text-center">No admin info</p>
+            <p className="text-center text-amber-600">Loading...</p>
           )}
         </div>
 
-        {/* ✅ Updated Navigation Order */}
-        <nav className="p-4 space-y-2">
-          <Link
-            to="/admin-dashboard"
-            className="block p-2 hover:bg-gray-700 rounded"
-          >
-            {isCollapsed ? "D" : "Dashboard"}
-          </Link>
-          <Link
-            to="/admin/user-management"
-            className="block p-2 hover:bg-gray-700 rounded"
-          >
-            {isCollapsed ? "U" : "User Management"}
-          </Link>
-          <Link
-            to="/admin/guide-management"
-            className="block p-2 hover:bg-gray-700 rounded"
-          >
-            {isCollapsed ? "G" : "Guide Management"}
-          </Link>
-          <Link
-            to="/admin/rent-car-management"
-            className="block p-2 hover:bg-gray-700 rounded"
-          >
-            {isCollapsed ? "R" : "Rent Car Management"}
-          </Link>
-          <Link
-            to="/admin/hotel-booking-management"
-            className="block p-2 hover:bg-gray-700 rounded"
-          >
-            {isCollapsed ? "H" : "Hotel Booking Management"}
-          </Link>
-          <Link
-            to="/admin/view-bookings"
-            className="block p-2 hover:bg-gray-700 rounded"
-          >
-            {isCollapsed ? "P" : "View Bookings"}
-          </Link>
-          <Link
-  to="/admin/card-management"
-  className="block p-2 hover:bg-gray-700 rounded"
->
-  {isCollapsed ? "C" : "Card Management"}
-</Link>
+        {/* Navigation */}
+        <nav className="flex-grow p-2 space-y-1 overflow-y-auto">
+          {navItems.map((item) => (
+            <Link
+              key={item.key}
+              to={item.path}
+              className={`flex items-center p-3 rounded-lg transition-all ${activeItem === item.key
+                ? "bg-gradient-to-r from-amber-400/20 to-orange-500/20 text-amber-600 border-l-4 border-amber-500 font-medium"
+                : "hover:bg-amber-200/50 text-gray-700 hover:text-amber-600"
+                }`}
+              onClick={() => setActiveItem(item.key)}
+            >
+              <span className={`${activeItem === item.key ? "text-amber-600" : "text-gray-600"}`}>
+                {item.icon}
+              </span>
+              {!isCollapsed && (
+                <span className="ml-3">{item.label}</span>
+              )}
+            </Link>
+          ))}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
+        {/* Logout */}
+        <div className="p-4 border-t border-amber-200">
           <button
             onClick={handleLogout}
-            className="w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded"
+            className={`flex items-center justify-center w-full p-3 rounded-lg bg-gradient-to-r from-red-500/10 to-red-600/10 hover:from-red-500/20 hover:to-red-600/20 text-red-600 transition-all ${isCollapsed ? "justify-center" : ""
+              }`}
           >
-            {isCollapsed ? "L" : "Logout"}
+            <FiLogOut size={20} />
+            {!isCollapsed && <span className="ml-3">Logout</span>}
           </button>
         </div>
       </aside>
 
       {/* Main content area */}
-      <main className="flex-grow p-4">
-        {/* Admin page content goes here */}
+      <main className="flex-grow bg-white overflow-y-auto">
+        {/* Admin page content will be rendered here */}
       </main>
     </div>
   );
