@@ -14,33 +14,51 @@ function Register() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+
+    if (name === "name") {
+      const lettersOnly = value.replace(/[^A-Za-z]/g, "");
+      if (lettersOnly.length <= 20) {
+        setFormData({ ...formData, [name]: lettersOnly });
+      }
+    } else if (name === "email") {
+      const [localPart, domainPart] = value.split("@");
+      if (!domainPart && localPart.length <= 20) {
+        setFormData({ ...formData, [name]: value });
+      } else if (domainPart && localPart.length <= 20) {
+        setFormData({ ...formData, [name]: value });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const validateForm = () => {
     const newErrors = {};
+    const nameRegex = /^[A-Za-z]{1,20}$/;
+    const emailRegex = /^[A-Za-z]{1,20}[0-9]*@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
     if (!formData.name.trim()) {
       newErrors.name = "Full name is required";
+    } else if (!nameRegex.test(formData.name)) {
+      newErrors.name = "Name must be only letters and max 20 characters";
     }
 
     if (!formData.email) {
       newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Email must start with letters (max 20 before '@')";
     }
 
     if (!formData.password) {
       newErrors.password = "Password is required";
-    } else if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
+    } else if (!passwordRegex.test(formData.password)) {
+      newErrors.password = "Min 8 characters with letters, numbers & special char";
     }
 
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = "Passwords do not match";
+      alert("Password mismatch!");
     }
 
     setErrors(newErrors);
@@ -78,7 +96,7 @@ function Register() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-amber-50 p-4 pt-24 md:pt-16">
       <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white rounded-xl shadow-lg overflow-hidden relative z-10 mt-16 md:mt-0">
-        {/* Image Side (Left) */}
+        {/* Image Side */}
         <div className="w-full md:w-1/2 h-72 md:h-auto relative">
           <img
             src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&auto=format&fit=crop&q=80&fit=crop&h=600"
@@ -95,7 +113,7 @@ function Register() {
           </div>
         </div>
 
-        {/* Form Side (Right) */}
+        {/* Form Side */}
         <div className="w-full md:w-1/2 p-8 md:p-10 space-y-6">
           <h2 className="text-2xl font-bold text-gray-800">Create Your Account</h2>
           <p className="text-gray-600">Join our community of travelers</p>
@@ -115,7 +133,7 @@ function Register() {
                 value={formData.name}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.name ? "border-amber-600" : "border-gray-300"
-                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 placeholder="John Doe"
               />
             </div>
@@ -139,8 +157,8 @@ function Register() {
                 value={formData.email}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.email ? "border-amber-600" : "border-gray-300"
-                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
-                placeholder="your@email.com"
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                placeholder="example@email.com"
               />
             </div>
             {errors.email && (
@@ -163,7 +181,7 @@ function Register() {
                 value={formData.password}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.password ? "border-amber-600" : "border-gray-300"
-                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 placeholder="••••••••"
               />
             </div>
@@ -187,7 +205,7 @@ function Register() {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.confirmPassword ? "border-amber-600" : "border-gray-300"
-                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 placeholder="••••••••"
               />
             </div>
@@ -196,7 +214,7 @@ function Register() {
             )}
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
             onClick={handleSubmit}

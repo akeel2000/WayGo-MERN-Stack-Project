@@ -14,23 +14,38 @@ function SignIn() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+
+    if (name === "email") {
+      const [localPart, domainPart] = value.split("@");
+      if (!domainPart && localPart.length <= 20) {
+        setFormData({ ...formData, [name]: value });
+      } else if (domainPart && localPart.length <= 20) {
+        setFormData({ ...formData, [name]: value });
+      }
+    } else if (name === "password") {
+      if (value.length <= 20) {
+        setFormData({ ...formData, [name]: value });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const validateForm = () => {
     const newErrors = {};
+    const emailRegex = /^[A-Za-z]{1,20}[0-9]*@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/;
 
     if (!formData.email) {
       newErrors.email = "Email is required";
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email";
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Email must start with letters (max 20 before @)";
     }
 
     if (!formData.password) {
       newErrors.password = "Password is required";
+    } else if (!passwordRegex.test(formData.password)) {
+      newErrors.password = "Min 8 chars with letters, numbers & special char";
     }
 
     setErrors(newErrors);
@@ -72,7 +87,7 @@ function SignIn() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-amber-50 px-4 py-16 md:py-24">
       <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Image Side (Left) */}
+        {/* Image Side */}
         <div className="w-full md:w-1/2 h-96 md:h-auto relative">
           <img
             src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=800&auto=format&fit=crop&q=80&fit=crop&h=700"
@@ -89,10 +104,10 @@ function SignIn() {
           </div>
         </div>
 
-        {/* Form Side (Right) */}
+        {/* Form Side */}
         <div className="w-full md:w-1/2 p-8 md:p-10 space-y-6">
-          <h2 className="text-2xl font-bold text-gray-800">Create Your Account</h2>
-          <p className="text-gray-600">Join our community of travelers</p>
+          <h2 className="text-2xl font-bold text-gray-800">Welcome Back</h2>
+          <p className="text-gray-600">Login to continue your journey</p>
 
           {error && (
             <div className="p-3 bg-red-50 text-red-600 rounded-lg text-sm">
@@ -115,7 +130,7 @@ function SignIn() {
                 value={formData.email}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.email ? "border-amber-600" : "border-gray-300"
-                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 placeholder="your@email.com"
               />
             </div>
@@ -139,7 +154,7 @@ function SignIn() {
                 value={formData.password}
                 onChange={handleChange}
                 className={`w-full pl-10 pr-3 py-2 rounded-lg border ${errors.password ? "border-amber-600" : "border-gray-300"
-                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent`}
+                  } bg-gray-50 focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 placeholder="••••••••"
               />
             </div>
@@ -148,7 +163,7 @@ function SignIn() {
             )}
           </div>
 
-          {/* Remember Me & Forgot Password */}
+          {/* Remember Me */}
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
@@ -157,14 +172,10 @@ function SignIn() {
                 type="checkbox"
                 className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-gray-300 rounded"
               />
-              <label
-                htmlFor="remember-me"
-                className="ml-2 block text-sm text-gray-700"
-              >
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
                 Remember me
               </label>
             </div>
-
           </div>
 
           {/* Submit Button */}
