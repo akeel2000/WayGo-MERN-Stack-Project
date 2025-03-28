@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "ajv": "^6.12.6",
     "ajv-keywords": "^3.5.2",
+    "axios": "^1.8.4",
     "connect-mongo": "^5.1.0",
     "eslint": "^9.23.0",
     "express-session": "^1.18.1",

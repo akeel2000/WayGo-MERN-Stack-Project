@@ -60,15 +60,6 @@ const DestinationView = () => {
 
   return (
     <div className="min-h-screen bg-amber-50">
-      <div className="container mx-auto px-4 py-8">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center text-amber-600 hover:text-amber-700 mb-6 transition-colors"
-        >
-          <FiArrowLeft className="mr-2" />
-          Back to Destinations
-        </button>
-
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           {/* Hero Image */}
           <div className="relative h-96 overflow-hidden">
@@ -87,6 +78,15 @@ const DestinationView = () => {
               </div>
             </div>
           </div>
+          <div className="container mx-auto px-4 py-8">
+        {/* Back Button - Navigates to '/destinations' */}
+        <button
+          onClick={() => navigate('/destinations')}  // Update this path if your route is different
+          className="flex items-center text-amber-600 hover:text-amber-700 mb-6 transition-colors"
+        >
+          <FiArrowLeft className="mr-2" />
+          Back to Destinations
+        </button>
 
           {/* Main Content */}
           <div className="p-6 md:p-8">
