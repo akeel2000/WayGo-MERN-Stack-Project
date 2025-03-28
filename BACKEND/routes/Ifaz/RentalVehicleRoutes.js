@@ -1,27 +1,29 @@
 const express = require("express");
-const router = express.Router();
-const upload = require("../../middleware/upload");
 const {
   addVehicle,
   getVehicles,
   getVehicleById,
   updateVehicle,
   deleteVehicle,
+  addReview,
+  getReviews,
+  uploadImages,
 } = require("../../controllers/Ifaz/RentalVehicleController");
 
-// Admin route: Create vehicle with up to 5 images
-router.post("/", upload.array("images", 5), addVehicle);
+const authMiddleware = require("../../middleware/authMiddleware");
+const optionalAuthMiddleware = require("../../middleware/optionalAuthMiddleware");
 
-// Public route: Get all vehicles (with images)
+const router = express.Router();
+
+// Admin Routes
+router.post("/", authMiddleware(["admin"]), uploadImages, addVehicle);
+router.put("/:id", authMiddleware(["admin"]), uploadImages, updateVehicle);
+router.delete("/:id", authMiddleware(["admin"]), deleteVehicle);
+
+// Public Routes
 router.get("/", getVehicles);
-
-// Public route: Get a specific vehicle by ID (with images)
 router.get("/:id", getVehicleById);
-
-// Admin route: Update vehicle (with new image uploads)
-router.put("/:id", upload.array("images", 5), updateVehicle);
-
-// Admin route: Delete vehicle
-router.delete("/:id", deleteVehicle);
+router.post("/:id/reviews", optionalAuthMiddleware, addReview);
+router.get("/:id/reviews", getReviews);
 
 module.exports = router;
