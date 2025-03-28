@@ -81,9 +81,6 @@ import { useNavigate } from "react-router-dom";
           <p className="text-xl md:text-2xl text-amber-100 max-w-3xl mx-auto mb-8">
             Discover the Pearl of the Indian Ocean through our stories, guides, and travel experiences
           </p>
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-            <FaArrowDown className="w-6 h-6 text-amber-300" />
-          </div>
         </div>
       </section>
 
