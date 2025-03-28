@@ -209,7 +209,7 @@ function SignIn() {
             Don't have an account?{" "}
             <button
               type="button"
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate("/register")}
               className="font-medium text-amber-600 hover:text-amber-700 focus:outline-none"
             >
               Sign up

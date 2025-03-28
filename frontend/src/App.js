@@ -23,6 +23,18 @@ import RentalVehicleDetails from "./Pages/ifaz/RentalVehicleDetails";
 import BlogRead from "./Pages/BlogRead";
 import DestinationView from "./Pages/Destinationview";
 
+import CartPage from "./Pages/shajeeh/CartPage";
+import SuccessPage from "./Pages/shajeeh/SuccessPage";
+
+import AdminBookings from './Pages/shajeeh/AdminBookings';
+import AdminHotelManagement from "./Pages/risi/AdminHotelManagement";
+
+
+import HotelList from "./Pages/risi/HotelList";
+import HotelDetails from "./Pages/risi/HotelDetails";
+
+
+
 function App() {
   return (
     <Routes>
@@ -39,9 +51,34 @@ function App() {
       <Route path="/destinations" element={<PublicLayout><Destination /></PublicLayout>} />
       <Route path="/destination/:id" element={<PublicLayout><DestinationView /></PublicLayout>} />
 
+
+
+
+      <Route path="/services/hotel-booking" element={<PublicLayout><HotelList /></PublicLayout>} />
+      <Route path="/hotel/:id" element={<PublicLayout><HotelDetails /></PublicLayout>} />
+
+
       {/* Additional User Routes */}
       <Route path="/rental-vehicles" element={<PublicLayout><UserRentalVehicles /></PublicLayout>} />
       <Route path="/rent-car/:id" element={<PublicLayout><RentalVehicleDetails /></PublicLayout>} />
+
+
+
+      <Route path="/cart" element={<PublicLayout><CartPage /></PublicLayout>} />
+<Route path="/success" element={<PublicLayout><SuccessPage /></PublicLayout>} />
+
+
+
+
+
+
+
+
+
+
+
+
+
 
       {/* Protected Routes for Users */}
       <Route path="/Home" element={<ProtectedRoute><PublicLayout><Home /></PublicLayout></ProtectedRoute>} />
@@ -52,6 +89,9 @@ function App() {
       <Route path="/admin/user-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><UserManagement /></AdminLayout></ProtectedRoute>} />
       <Route path="/admin/guide-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminGuideManagement /></AdminLayout></ProtectedRoute>} />
       <Route path="/admin/rent-car-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><RentalVehicles /></AdminLayout></ProtectedRoute>} />
+      <Route path="/admin/view-bookings" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminBookings /></AdminLayout></ProtectedRoute>} />
+      <Route path="/admin/hotel-booking-management" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminHotelManagement /></AdminLayout></ProtectedRoute>} />
+
 
       <Route path="*" element={<div className="p-4">404 Not Found</div>} />
     </Routes>

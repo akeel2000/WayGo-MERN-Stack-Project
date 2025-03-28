@@ -1,4 +1,3 @@
-// src/components/AdminSidebar.js
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -7,7 +6,6 @@ function AdminSidebar() {
   const [admin, setAdmin] = useState(null);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // On mount, check if the admin is logged in by calling /api/auth/isLoggedIn
   useEffect(() => {
     fetch("http://localhost:5000/api/auth/isLoggedIn", {
       credentials: "include",
@@ -36,7 +34,6 @@ function AdminSidebar() {
         credentials: "include",
       });
       setAdmin(null);
-      // Navigate to home and add query parameter to trigger the login modal
       navigate("/?showLoginModal=true");
     } catch (err) {
       console.error(err);
@@ -83,6 +80,7 @@ function AdminSidebar() {
           )}
         </div>
 
+        {/* ✅ Updated Navigation Order */}
         <nav className="p-4 space-y-2">
           <Link
             to="/admin-dashboard"
@@ -113,6 +111,12 @@ function AdminSidebar() {
             className="block p-2 hover:bg-gray-700 rounded"
           >
             {isCollapsed ? "H" : "Hotel Booking Management"}
+          </Link>
+          <Link
+            to="/admin/view-bookings"
+            className="block p-2 hover:bg-gray-700 rounded"
+          >
+            {isCollapsed ? "P" : "View Bookings"}
           </Link>
         </nav>
 
