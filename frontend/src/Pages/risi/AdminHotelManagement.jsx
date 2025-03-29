@@ -434,17 +434,25 @@ function AdminHotelManagement() {
 
                 {/* Facilities */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Facilities (comma separated)</label>
-                  <input
-                    type="text"
-                    name="facilities"
-                    value={formDataState.facilities}
-                    onChange={handleInputChange}
-                    placeholder="WiFi, Pool, Gym, Restaurant"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
+  <label className="block text-sm font-medium text-gray-700 mb-1">Facilities</label>
+  <select
+    name="facilities"
+    value={formDataState.facilities}
+    onChange={handleInputChange}
+    required
+    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+  >
+    <option value="" disabled>Select a facility</option>
+    <option value="WiFi">WiFi</option>
+    <option value="Pool">Pool</option>
+    <option value="Gym">Gym</option>
+    <option value="Restaurant">Restaurant</option>
+    <option value="Spa">Spa</option>
+    <option value="Parking">Parking</option>
+    <option value="Bar">Bar</option>
+    <option value="Conference Room">Conference Room</option>
+  </select>
+</div>
                 {/* Existing Images */}
                 {editingHotel && existingImages.length > 0 && (
                   <div>
