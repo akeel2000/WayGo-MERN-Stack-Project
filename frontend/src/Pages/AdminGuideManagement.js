@@ -46,11 +46,27 @@ function AdminGuideManagement() {
   // Input handlers
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormDataState({
-      ...formDataState,
-      [name]: type === "checkbox" ? checked : value,
-    });
+  
+    if (name === "name") {
+      if (value.length <= 20) {
+        setFormDataState({ ...formDataState, [name]: value });
+      }
+    } else if (name === "location") {
+      const onlyLetters = value.replace(/[^A-Za-z\s]/g, ""); // allow letters and spaces
+      if (onlyLetters.length <= 20) {
+        setFormDataState({ ...formDataState, [name]: onlyLetters });
+      }
+    } else if (name === "rentPerDay") {
+      const numericValue = value.replace(/[^\d.]/g, "");
+      setFormDataState({ ...formDataState, [name]: numericValue });
+    } else {
+      setFormDataState({
+        ...formDataState,
+        [name]: type === "checkbox" ? checked : value,
+      });
+    }
   };
+  
 
   const handleFileChange = (index, file) => {
     const newFiles = [...filesState];
@@ -109,6 +125,7 @@ function AdminGuideManagement() {
     setFilesState([]);
     setIsModalOpen(true);
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -121,33 +138,38 @@ function AdminGuideManagement() {
       formData.append("location", formDataState.location);
       formData.append("languages", formDataState.languages);
       formData.append("available", formDataState.available);
-      formData.append("rentPerDay", formDataState.rentPerDay);
-
+  
+      // ✅ Format rentPerDay to always include ".00"
+      formData.append(
+        "rentPerDay",
+        parseFloat(formDataState.rentPerDay || 0).toFixed(2)
+      );
+  
       filesState.forEach((file) => {
         if (file) formData.append("images", file);
       });
-
+  
       if (editingGuide) {
         formData.append("keptImages", JSON.stringify(existingImages));
       }
-
+  
       const url = editingGuide
         ? `http://localhost:5000/api/guides/${editingGuide._id}`
         : "http://localhost:5000/api/guides";
       const method = editingGuide ? "PUT" : "POST";
-
+  
       const res = await fetch(url, {
         method,
         credentials: "include",
         body: formData,
       });
-
+  
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
         throw new Error(errData.message || "Failed to save guide");
       }
-
-      // Reset form
+  
+      // Reset
       setFormDataState({
         name: "",
         about: "",
@@ -168,6 +190,7 @@ function AdminGuideManagement() {
       setIsLoading(false);
     }
   };
+  
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this guide?")) return;
@@ -306,7 +329,7 @@ function AdminGuideManagement() {
                       <div className="text-sm text-gray-900">{guide.experience} years</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">${guide.rentPerDay}/day</div>
+                      <div className="text-sm font-medium text-gray-900">Rs{guide.rentPerDay}/day</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${guide.available
@@ -408,7 +431,7 @@ function AdminGuideManagement() {
 
                   {/* Rate */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Rate per day ($)*</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Rate per day (Rs)*</label>
                     <input
                       type="number"
                       name="rentPerDay"

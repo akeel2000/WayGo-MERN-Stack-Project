@@ -9,6 +9,7 @@ function UserManagement() {
     password: "",
     role: "user",
   });
+  const [formErrors, setFormErrors] = useState({});
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -26,9 +27,7 @@ function UserManagement() {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(
-          `Failed to fetch users: ${errorData.error || errorData.message || "Unknown error"}`
-        );
+        throw new Error(`Failed to fetch users: ${errorData.error || errorData.message || "Unknown error"}`);
       }
 
       const data = await res.json();
@@ -42,11 +41,57 @@ function UserManagement() {
   };
 
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "name") {
+      const onlyLetters = value.replace(/[^A-Za-z]/g, "");
+      if (onlyLetters.length <= 20) {
+        setFormData({ ...formData, name: onlyLetters });
+      }
+    } else if (name === "email") {
+      const [localPart, domainPart] = value.split("@");
+      if (!domainPart && /^[A-Za-z]*$/.test(localPart) && localPart.length <= 20) {
+        setFormData({ ...formData, email: value });
+      } else if (domainPart && /^[A-Za-z][A-Za-z0-9]{0,19}$/.test(localPart)) {
+        setFormData({ ...formData, email: value });
+      }
+    } else if (name === "password") {
+      if (value.length <= 20) {
+        setFormData({ ...formData, password: value });
+      }
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    const emailRegex = /^[A-Za-z][A-Za-z0-9]{0,19}@[^\s@]+\.[^\s@]+$/;
+
+    if (!formData.name.trim()) {
+      errors.name = "Name is required";
+    } else if (formData.name.length > 20) {
+      errors.name = "Max 20 letters only";
+    }
+
+    if (!formData.email) {
+      errors.email = "Email is required";
+    } else if (!emailRegex.test(formData.email)) {
+      errors.email = "Invalid email format";
+    }
+
+    if (!editingUser && !formData.password) {
+      errors.password = "Password is required";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setIsLoading(true);
     try {
       let res;
@@ -54,15 +99,12 @@ function UserManagement() {
         const updateData = { ...formData };
         if (!updateData.password) delete updateData.password;
 
-        res = await fetch(
-          `http://localhost:5000/api/admin/users/${editingUser._id}`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include",
-            body: JSON.stringify(updateData),
-          }
-        );
+        res = await fetch(`http://localhost:5000/api/admin/users/${editingUser._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(updateData),
+        });
       } else {
         res = await fetch("http://localhost:5000/api/admin/users", {
           method: "POST",
@@ -74,14 +116,13 @@ function UserManagement() {
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(
-          `Failed to save user: ${errorData.error || errorData.message || "Unknown error"}`
-        );
+        throw new Error(`Failed to save user: ${errorData.error || errorData.message || "Unknown error"}`);
       }
 
       setFormData({ name: "", email: "", password: "", role: "user" });
       setEditingUser(null);
       setIsModalOpen(false);
+      setFormErrors({});
       await fetchUsers();
     } catch (err) {
       console.error(err);
@@ -99,23 +140,25 @@ function UserManagement() {
       password: "",
       role: user.role,
     });
+    setFormErrors({});
     setIsModalOpen(true);
   };
 
   const handleDelete = async (userId) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
+
     setIsLoading(true);
     try {
       const res = await fetch(`http://localhost:5000/api/admin/users/${userId}`, {
         method: "DELETE",
         credentials: "include",
       });
+
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
-        throw new Error(
-          `Failed to delete user: ${errorData.error || errorData.message || "Unknown error"}`
-        );
+        throw new Error(`Failed to delete user: ${errorData.error || errorData.message || "Unknown error"}`);
       }
+
       await fetchUsers();
     } catch (err) {
       console.error(err);
@@ -128,12 +171,14 @@ function UserManagement() {
   const openAddModal = () => {
     setEditingUser(null);
     setFormData({ name: "", email: "", password: "", role: "user" });
+    setFormErrors({});
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setEditingUser(null);
+    setFormErrors({});
   };
 
   return (
@@ -257,7 +302,6 @@ function UserManagement() {
         </div>
       </div>
 
-      {/* User Form Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md">
@@ -266,14 +310,7 @@ function UserManagement() {
                 <h2 className="text-xl font-semibold text-gray-800">
                   {editingUser ? "Edit User" : "Add New User"}
                 </h2>
-                <button
-                  onClick={closeModal}
-                  className="text-amber-600 hover:text-amber-800 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+                <button onClick={closeModal} className="text-amber-600 hover:text-amber-800 transition-colors">✖</button>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -285,9 +322,11 @@ function UserManagement() {
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
+                  {formErrors.name && <p className="text-sm text-red-600 mt-1">{formErrors.name}</p>}
                 </div>
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
                   <input
@@ -296,9 +335,11 @@ function UserManagement() {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full px-4 py-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
+                  {formErrors.email && <p className="text-sm text-red-600 mt-1">{formErrors.email}</p>}
                 </div>
+
                 {!editingUser && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Password*</label>
@@ -308,48 +349,39 @@ function UserManagement() {
                       value={formData.password}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-4 py-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                      className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                     />
+                    {formErrors.password && <p className="text-sm text-red-600 mt-1">{formErrors.password}</p>}
                   </div>
                 )}
+
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Role*</label>
                   <select
                     name="role"
                     value={formData.role}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                    className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500"
                   >
                     <option value="user">Standard User</option>
                     <option value="admin">Administrator</option>
                   </select>
                 </div>
-                <div className="pt-4 flex justify-end space-x-4 border-t border-amber-100">
+
+                <div className="pt-4 flex justify-end space-x-4 border-t">
                   <button
                     type="button"
                     onClick={closeModal}
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600 transition-colors flex items-center"
+                    className="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-lg hover:from-amber-600 hover:to-orange-600"
                     disabled={isLoading}
                   >
-                    {isLoading ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Processing...
-                      </>
-                    ) : (
-                      <>
-                        {editingUser ? "Update User" : "Add User"}
-                      </>
-                    )}
+                    {isLoading ? "Processing..." : editingUser ? "Update User" : "Add User"}
                   </button>
                 </div>
               </form>
