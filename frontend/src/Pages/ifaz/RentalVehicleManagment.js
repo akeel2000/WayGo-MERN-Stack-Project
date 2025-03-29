@@ -376,10 +376,19 @@ function RentalVehiclesAdmin() {
                       type="text"
                       name="name"
                       value={formDataState.name}
-                      onChange={handleInputChange}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        // Allow only letters (uppercase and lowercase)
+                        if (/^[a-zA-Z\s]*$/.test(value)) {
+                          setFormDataState({ ...formDataState, name: value });
+                        }
+                      }}
                       required
                       className="w-full px-4 py-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                     />
+                    {formDataState.name && !/^[a-zA-Z\s]+$/.test(formDataState.name) && (
+                      <p className="text-sm text-red-500 mt-1">Please enter a valid name (letters only).</p>
+                    )}
                   </div>
 
                   {/* Make */}
@@ -398,14 +407,22 @@ function RentalVehiclesAdmin() {
                   {/* Model */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Model*</label>
-                    <input
-                      type="text"
+                    <select
                       name="model"
                       value={formDataState.model}
                       onChange={handleInputChange}
                       required
                       className="w-full px-4 py-2 border border-amber-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
-                    />
+                    >
+                      <option value="" disabled>Select a model</option>
+                      <option value="Toyota Corolla">Toyota Corolla</option>
+                      <option value="Honda Civic">Honda Civic</option>
+                      <option value="Ford Mustang">Ford Mustang</option>
+                      <option value="Tesla Model 3">Tesla Model 3</option>
+                      <option value="BMW 3 Series">BMW 3 Series</option>
+                      <option value="Audi A4">Audi A4</option>
+                      <option value="Mercedes-Benz C-Class">Mercedes-Benz C-Class</option>
+                    </select>
                   </div>
 
                   {/* Year */}
