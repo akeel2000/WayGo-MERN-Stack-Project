@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 function AdminGuideManagement() {
   const [guides, setGuides] = useState([]);
   const [error, setError] = useState("");
   const [editingGuide, setEditingGuide] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  
 
   // Form state
   const [formDataState, setFormDataState] = useState({
@@ -42,6 +47,51 @@ function AdminGuideManagement() {
   useEffect(() => {
     fetchGuides();
   }, []);
+
+
+
+  const generatePDF = async () => {
+    const doc = new jsPDF();
+  
+    const loadImage = (src) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous"; // allow CORS for local images
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    };
+  
+    try {
+      const logo = await loadImage("/logo.png"); // assuming logo.png is in public/
+      doc.addImage(logo, "PNG", 15, 10, 30, 30);
+  
+      doc.setFontSize(18);
+      doc.text("Tour Guides Report", 75, 25);
+  
+      const tableColumn = ["Name", "Location", "Experience", "Languages", "Available", "Rate"];
+      const tableRows = guides.map((guide) => [
+        guide.name,
+        guide.location,
+        guide.experience + " yrs",
+        guide.languages?.join(", "),
+        guide.available ? "Yes" : "No",
+        `Rs ${guide.rentPerDay}/day`,
+      ]);
+  
+      autoTable(doc, {
+        startY: 50,
+        head: [tableColumn],
+        body: tableRows,
+      });
+  
+      doc.save("Tour_Guide_Report.pdf");
+    } catch (err) {
+      console.error("Failed to load logo or generate PDF:", err);
+    }
+  };
+  
 
   // Input handlers
   const handleInputChange = (e) => {
@@ -240,7 +290,18 @@ function AdminGuideManagement() {
         <div>
           <h1 className="text-3xl font-bold text-gray-800">Guide Management</h1>
           <p className="text-gray-600 mt-1">Manage tour guides and their availability</p>
+          {/* <p className="text-gray-600 mt-1">Export report as PDF</p> */}
         </div>
+        <button
+  onClick={generatePDF}
+  className="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all flex items-center gap-2 shadow-md"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+  </svg>
+  Export as PDF
+</button>
+
         <button
           onClick={openAddModal}
           className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all flex items-center gap-2 shadow-md"

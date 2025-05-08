@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -13,6 +15,8 @@ function UserManagement() {
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   useEffect(() => {
     fetchUsers();
@@ -39,6 +43,52 @@ function UserManagement() {
       setIsLoading(false);
     }
   };
+
+
+  const exportPDF = async () => {
+    const doc = new jsPDF();
+
+    const loadImage = (src) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    };
+
+    try {
+      const logo = await loadImage("/logo.png");
+      doc.addImage(logo, "PNG", 15, 10, 30, 30);
+    } catch (err) {
+      console.warn("Logo failed to load, skipping logo.", err);
+    }
+
+    doc.setFontSize(18);
+    doc.text("User Management Report", 75, 25);
+
+    const tableColumn = ["Name", "Email", "Role"];
+    const tableRows = users.map((user) => [
+      user.name,
+      user.email,
+      user.role === "admin" ? "Administrator" : "Standard User",
+    ]);
+
+    autoTable(doc, {
+      startY: 50,
+      head: [tableColumn],
+      body: tableRows,
+    });
+
+    doc.save("user_report.pdf");
+  };
+
+
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -189,6 +239,19 @@ function UserManagement() {
           <h1 className="text-3xl font-bold text-gray-800">User Management</h1>
           <p className="text-gray-600 mt-1">Manage system users and permissions</p>
         </div>
+        <input
+            type="text"
+            placeholder="Search by name or email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            onClick={exportPDF}
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 shadow-md"
+          >
+            Export PDF
+          </button>
         <button
           onClick={openAddModal}
           className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all flex items-center gap-2 shadow-md"
@@ -236,7 +299,7 @@ function UserManagement() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-amber-50">
-              {users.length === 0 ? (
+              {filteredUsers.length === 0 ? (
                 <tr>
                   <td colSpan="4" className="px-6 py-8 text-center">
                     <div className="flex flex-col items-center justify-center text-gray-500">
@@ -249,7 +312,7 @@ function UserManagement() {
                   </td>
                 </tr>
               ) : (
-                users.map((user) => (
+                filteredUsers.map((user) => (
                   <tr key={user._id} className="hover:bg-amber-50/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
