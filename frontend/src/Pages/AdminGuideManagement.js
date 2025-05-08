@@ -518,6 +518,7 @@ function AdminGuideManagement() {
                     {filesState.map((file, idx) => (
                       <div key={idx} className="flex items-center space-x-4">
                         <input
+                         style={{ display: 'block' }}
                           type="file"
                           onChange={(e) => handleFileChange(idx, e.target.files[0])}
                           className="block w-full text-sm text-gray-500

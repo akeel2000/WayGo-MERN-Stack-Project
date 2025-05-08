@@ -79,6 +79,8 @@ const WayGoHomepage = () => {
     }
   ];
 
+  
+
   // Handlers for navigating testimonials
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);

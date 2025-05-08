@@ -40,6 +40,9 @@ import AdminCardManagement from './Pages/shajeeh/AdminCardManagement';
 
 import UserCards from './Pages/shajeeh/UserCards'; 
 
+import WeatherSearch from "./Pages/WeatherSearch"; // ✅ Add this
+
+
 
 
 function App() {
@@ -64,6 +67,7 @@ function App() {
       <Route path="/services/hotel-booking" element={<PublicLayout><HotelList /></PublicLayout>} />
       <Route path="/hotel/:id" element={<PublicLayout><HotelDetails /></PublicLayout>} />
       <Route path="/card-entry" element={<PublicLayout><CardEntry /></PublicLayout>} />
+      <Route path="/weather" element={<PublicLayout><WeatherSearch /></PublicLayout>} />
 
 
 

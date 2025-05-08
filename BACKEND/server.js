@@ -13,6 +13,9 @@ const hotelRoutes = require("./routes/risi/hotelRoute");
 const rentalVehicleRoutes = require("./routes/Ifaz/RentalVehicleRoutes");
 const cartRoutes = require("./routes/shajeeh/cartRoutes");
 const cardRoutes = require("./routes/shajeeh/cardRoutes");
+const weatherRoutes = require('./routes/Akeel/weatherRoutes');
+
+
 
 
 
@@ -41,6 +44,7 @@ app.use("/api/hotels", hotelRoutes);
 app.use("/api/rentalVehicles", rentalVehicleRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/cards", cardRoutes); // ✅ Add this line
+app.use('/api/weather', weatherRoutes);
 
 // MongoDB Connection
 mongoose
