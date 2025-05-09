@@ -159,21 +159,21 @@ const AdminCardManagement = () => {
                         <div className="flex justify-end space-x-2">
                           <button
                             onClick={() => handleEdit(card)}
-                            className="px-3 py-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg text-sm hover:from-blue-600 hover:to-indigo-600 transition-all shadow-sm hover:shadow-md flex items-center"
+                            className="p-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all shadow-sm hover:shadow-md flex items-center justify-center"
+                            title="Edit Card"
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                               <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                             </svg>
-                            Edit
                           </button>
                           <button
                             onClick={() => handleDeleteClick(card._id)}
-                            className="px-3 py-1.5 bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-lg text-sm hover:from-rose-600 hover:to-pink-600 transition-all shadow-sm hover:shadow-md flex items-center"
+                            className="p-2 bg-gradient-to-r from-red-500 to-rose-500 text-white rounded-lg hover:from-red-600 hover:to-rose-600 transition-all shadow-sm hover:shadow-md flex items-center justify-center"
+                            title="Delete Card"
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                             </svg>
-                            Delete
                           </button>
                         </div>
                       </td>
@@ -186,209 +186,209 @@ const AdminCardManagement = () => {
         )}
 
         {/* Edit Modal */}
-       {editCard && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xl font-semibold text-gray-800">Edit Card</h3>
-              <button
-                onClick={() => {
-                  setEditCard(null);
-                  setErrors({});
-                }}
-                className="text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              // Validation logic
-              const newErrors = {};
-
-              if (!form.cardHolderName.trim()) {
-                newErrors.cardHolderName = 'Cardholder name is required';
-              } else if (form.cardHolderName.length < 2) {
-                newErrors.cardHolderName = 'Name is too short';
-              }
-
-              const rawCardNumber = form.cardNumber.replace(/\s+/g, '');
-              if (!rawCardNumber) {
-                newErrors.cardNumber = 'Card number is required';
-              } else if (!/^\d{16}$/.test(rawCardNumber)) {
-                newErrors.cardNumber = 'Invalid card number (16 digits required)';
-              }
-
-              if (!form.expiryDate) {
-                newErrors.expiryDate = 'Expiry date is required';
-              } else {
-                const [month, year] = form.expiryDate.split('/');
-                const currentYear = new Date().getFullYear() % 100;
-                const currentMonth = new Date().getMonth() + 1;
-
-                if (!month || !year || month.length !== 2 || year.length !== 2) {
-                  newErrors.expiryDate = 'Invalid format (MM/YY)';
-                } else if (parseInt(month) < 1 || parseInt(month) > 12) {
-                  newErrors.expiryDate = 'Invalid month (1-12)';
-                } else if (
-                  parseInt(year) < currentYear ||
-                  (parseInt(year) === currentYear && parseInt(month) < currentMonth)
-                ) {
-                  newErrors.expiryDate = 'Card has expired';
-                }
-              }
-
-              if (!form.cvv) {
-                newErrors.cvv = 'CVV is required';
-              } else if (!/^\d{3,4}$/.test(form.cvv)) {
-                newErrors.cvv = 'Invalid CVV (3-4 digits)';
-              }
-
-              if (Object.keys(newErrors).length > 0) {
-                setErrors(newErrors);
-              } else {
-                handleUpdate();
-              }
-            }}>
-              <div className="space-y-4">
-                {/* Cardholder Name */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Cardholder Name
-                    <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={form.cardHolderName}
-                    onChange={e => {
-                      setForm({ ...form, cardHolderName: e.target.value });
-                      if (errors.cardHolderName) {
-                        setErrors({ ...errors, cardHolderName: '' });
-                      }
-                    }}
-                    className={`border ${errors.cardHolderName ? 'border-rose-500' : 'border-gray-300'} p-3 w-full rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors`}
-                    placeholder="John Doe"
-                  />
-                  {errors.cardHolderName && (
-                    <p className="mt-1 text-sm text-rose-600">{errors.cardHolderName}</p>
-                  )}
-                </div>
-
-                {/* Card Number */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Card Number
-                    <span className="text-rose-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    value={form.cardNumber}
-                    onChange={e => {
-                      const value = e.target.value.replace(/\s+/g, '').replace(/(\d{4})/g, '$1 ').trim();
-                      setForm({ ...form, cardNumber: value });
-                      if (errors.cardNumber) {
-                        setErrors({ ...errors, cardNumber: '' });
-                      }
-                    }}
-                    maxLength={19}
-                    className={`border ${errors.cardNumber ? 'border-rose-500' : 'border-gray-300'} p-3 w-full rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors`}
-                    placeholder="4242 4242 4242 4242"
-                  />
-                  {errors.cardNumber && (
-                    <p className="mt-1 text-sm text-rose-600">{errors.cardNumber}</p>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Expiry Date */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Expiry Date
-                      <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={form.expiryDate}
-                      onChange={e => {
-                        let value = e.target.value.replace(/\D/g, '');
-                        if (value.length > 2) {
-                          value = value.substring(0, 2) + '/' + value.substring(2, 4);
-                        }
-                        setForm({ ...form, expiryDate: value });
-                        if (errors.expiryDate) {
-                          setErrors({ ...errors, expiryDate: '' });
-                        }
-                      }}
-                      maxLength={5}
-                      className={`border ${errors.expiryDate ? 'border-rose-500' : 'border-gray-300'} p-3 w-full rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors`}
-                      placeholder="MM/YY"
-                    />
-                    {errors.expiryDate && (
-                      <p className="mt-1 text-sm text-rose-600">{errors.expiryDate}</p>
-                    )}
-                  </div>
-
-                  {/* CVV */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      CVV
-                      <span className="text-rose-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={form.cvv}
-                      onChange={e => {
-                        const value = e.target.value.replace(/\D/g, '').substring(0, 4);
-                        setForm({ ...form, cvv: value });
-                        if (errors.cvv) {
-                          setErrors({ ...errors, cvv: '' });
-                        }
-                      }}
-                      maxLength={4}
-                      className={`border ${errors.cvv ? 'border-rose-500' : 'border-gray-300'} p-3 w-full rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors`}
-                      placeholder="123"
-                    />
-                    {errors.cvv && (
-                      <p className="mt-1 text-sm text-rose-600">{errors.cvv}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex justify-end space-x-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditCard(null);
-                      setErrors({});
-                    }}
-                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="px-6 py-2 bg-gradient-to-r from-indigo-500 to-blue-600 text-white rounded-lg shadow hover:from-indigo-600 hover:to-blue-700 transition-all disabled:opacity-70 flex items-center"
-                  >
-                    {isLoading ? (
-                      <>
-                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Updating...
-                      </>
-                    ) : 'Update Card'}
-                  </button>
-                </div>
+        {editCard && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-xl">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-semibold text-gray-800">Edit Card</h3>
+                <button
+                  onClick={() => {
+                    setEditCard(null);
+                    setErrors({});
+                  }}
+                  className="text-gray-500 hover:text-gray-700 transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-            </form>
+
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                // Validation logic
+                const newErrors = {};
+
+                if (!form.cardHolderName.trim()) {
+                  newErrors.cardHolderName = 'Cardholder name is required';
+                } else if (form.cardHolderName.length < 2) {
+                  newErrors.cardHolderName = 'Name is too short';
+                }
+
+                const rawCardNumber = form.cardNumber.replace(/\s+/g, '');
+                if (!rawCardNumber) {
+                  newErrors.cardNumber = 'Card number is required';
+                } else if (!/^\d{16}$/.test(rawCardNumber)) {
+                  newErrors.cardNumber = 'Invalid card number (16 digits required)';
+                }
+
+                if (!form.expiryDate) {
+                  newErrors.expiryDate = 'Expiry date is required';
+                } else {
+                  const [month, year] = form.expiryDate.split('/');
+                  const currentYear = new Date().getFullYear() % 100;
+                  const currentMonth = new Date().getMonth() + 1;
+
+                  if (!month || !year || month.length !== 2 || year.length !== 2) {
+                    newErrors.expiryDate = 'Invalid format (MM/YY)';
+                  } else if (parseInt(month) < 1 || parseInt(month) > 12) {
+                    newErrors.expiryDate = 'Invalid month (1-12)';
+                  } else if (
+                    parseInt(year) < currentYear ||
+                    (parseInt(year) === currentYear && parseInt(month) < currentMonth)
+                  ) {
+                    newErrors.expiryDate = 'Card has expired';
+                  }
+                }
+
+                if (!form.cvv) {
+                  newErrors.cvv = 'CVV is required';
+                } else if (!/^\d{3,4}$/.test(form.cvv)) {
+                  newErrors.cvv = 'Invalid CVV (3-4 digits)';
+                }
+
+                if (Object.keys(newErrors).length > 0) {
+                  setErrors(newErrors);
+                } else {
+                  handleUpdate();
+                }
+              }}>
+                <div className="space-y-4">
+                  {/* Cardholder Name */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Cardholder Name
+                      <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={form.cardHolderName}
+                      onChange={e => {
+                        setForm({ ...form, cardHolderName: e.target.value });
+                        if (errors.cardHolderName) {
+                          setErrors({ ...errors, cardHolderName: '' });
+                        }
+                      }}
+                      className={`border ${errors.cardHolderName ? 'border-rose-500' : 'border-gray-300'} p-3 w-full rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors`}
+                      placeholder="John Doe"
+                    />
+                    {errors.cardHolderName && (
+                      <p className="mt-1 text-sm text-rose-600">{errors.cardHolderName}</p>
+                    )}
+                  </div>
+
+                  {/* Card Number */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Card Number
+                      <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={form.cardNumber}
+                      onChange={e => {
+                        const value = e.target.value.replace(/\s+/g, '').replace(/(\d{4})/g, '$1 ').trim();
+                        setForm({ ...form, cardNumber: value });
+                        if (errors.cardNumber) {
+                          setErrors({ ...errors, cardNumber: '' });
+                        }
+                      }}
+                      maxLength={19}
+                      className={`border ${errors.cardNumber ? 'border-rose-500' : 'border-gray-300'} p-3 w-full rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors`}
+                      placeholder="4242 4242 4242 4242"
+                    />
+                    {errors.cardNumber && (
+                      <p className="mt-1 text-sm text-rose-600">{errors.cardNumber}</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    {/* Expiry Date */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Expiry Date
+                        <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={form.expiryDate}
+                        onChange={e => {
+                          let value = e.target.value.replace(/\D/g, '');
+                          if (value.length > 2) {
+                            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                          }
+                          setForm({ ...form, expiryDate: value });
+                          if (errors.expiryDate) {
+                            setErrors({ ...errors, expiryDate: '' });
+                          }
+                        }}
+                        maxLength={5}
+                        className={`border ${errors.expiryDate ? 'border-rose-500' : 'border-gray-300'} p-3 w-full rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors`}
+                        placeholder="MM/YY"
+                      />
+                      {errors.expiryDate && (
+                        <p className="mt-1 text-sm text-rose-600">{errors.expiryDate}</p>
+                      )}
+                    </div>
+
+                    {/* CVV */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        CVV
+                        <span className="text-rose-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={form.cvv}
+                        onChange={e => {
+                          const value = e.target.value.replace(/\D/g, '').substring(0, 4);
+                          setForm({ ...form, cvv: value });
+                          if (errors.cvv) {
+                            setErrors({ ...errors, cvv: '' });
+                          }
+                        }}
+                        maxLength={4}
+                        className={`border ${errors.cvv ? 'border-rose-500' : 'border-gray-300'} p-3 w-full rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors`}
+                        placeholder="123"
+                      />
+                      {errors.cvv && (
+                        <p className="mt-1 text-sm text-rose-600">{errors.cvv}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-3 pt-4">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditCard(null);
+                        setErrors({});
+                      }}
+                      className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg shadow hover:from-green-600 hover:to-emerald-700 transition-all disabled:opacity-70 flex items-center"
+                    >
+                      {isLoading ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Updating...
+                        </>
+                      ) : 'Update Card'}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
         {/* Delete Confirmation Modal */}
         {isConfirmOpen && (
@@ -418,7 +418,7 @@ const AdminCardManagement = () => {
                 <button
                   onClick={handleDeleteConfirm}
                   disabled={isLoading}
-                  className="px-6 py-2 bg-gradient-to-r from-rose-500 to-pink-600 text-white rounded-lg shadow hover:from-rose-600 hover:to-pink-700 transition-all disabled:opacity-70 flex items-center"
+                  className="px-6 py-2 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-lg shadow hover:from-red-600 hover:to-rose-700 transition-all disabled:opacity-70 flex items-center"
                 >
                   {isLoading ? (
                     <>
