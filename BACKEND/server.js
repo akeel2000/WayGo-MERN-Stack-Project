@@ -14,6 +14,9 @@ const rentalVehicleRoutes = require("./routes/Ifaz/RentalVehicleRoutes");
 const cartRoutes = require("./routes/shajeeh/cartRoutes");
 const cardRoutes = require("./routes/shajeeh/cardRoutes");
 const weatherRoutes = require('./routes/Akeel/weatherRoutes');
+const dialogflowWebhook = require("./routes/Akeel/dialogflowWebhook");
+
+
 
 
 
@@ -45,6 +48,8 @@ app.use("/api/rentalVehicles", rentalVehicleRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/cards", cardRoutes); // ✅ Add this line
 app.use('/api/weather', weatherRoutes);
+app.use("/api", dialogflowWebhook);
+
 
 // MongoDB Connection
 mongoose
