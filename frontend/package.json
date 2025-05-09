@@ -14,10 +14,7 @@
     "eslint": "^9.23.0",
     "express-session": "^1.18.1",
     "jspdf": "^3.0.1",
-<<<<<<< HEAD
-=======
     "jspdf-autotable": "^5.0.2",
->>>>>>> a791b3650ad9383a6775a118535892bf243e8265
     "lucide-react": "^0.484.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
