@@ -3,10 +3,7 @@ const { getWeather, getLocationSuggestions } = require("../../controllers/Akeel/
 
 const router = express.Router();
 
-// ✅ Route for autocomplete location suggestions
-// router.get("/autocomplete", getLocationSuggestions);
-
-// ✅ Route for fetching 7-day weather forecast
+router.get("/autocomplete", getLocationSuggestions);
 router.get("/", getWeather);
 
 module.exports = router;

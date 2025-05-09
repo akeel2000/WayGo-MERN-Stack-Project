@@ -12,20 +12,28 @@ function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/auth/isLoggedIn", {
-      credentials: "include",
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject("Not logged in")))
-      .then((data) => {
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/isLoggedIn", {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Not logged in");
+  
+        const data = await res.json();
         setUser({
           id: data.userId,
           role: data.role,
           name: data.name,
           email: data.email,
         });
-      })
-      .catch(() => setUser(null));
+      } catch (error) {
+        setUser(null); // Not logged in = guest mode
+      }
+    };
+  
+    checkAuth();
   }, []);
+  
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -143,8 +151,15 @@ function Header() {
           <Link to="/contact" className={navLinkClasses("/contact")}>
             Contact Us
           </Link>
-        </nav>
 
+          <Link to="/weather" className={navLinkClasses("/weather")}>
+  Weather
+</Link>
+
+ 
+
+        </nav>
+  
         {/* User Actions */}
         <div className="hidden md:flex items-center space-x-4">
           {!user ? (
