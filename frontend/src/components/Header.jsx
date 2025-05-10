@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FaUser, FaShoppingCart, FaSignOutAlt, FaCreditCard } from "react-icons/fa";
 
 function Header() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function Header() {
           credentials: "include",
         });
         if (!res.ok) throw new Error("Not logged in");
-  
+
         const data = await res.json();
         setUser({
           id: data.userId,
@@ -27,13 +28,12 @@ function Header() {
           email: data.email,
         });
       } catch (error) {
-        setUser(null); // Not logged in = guest mode
+        setUser(null);
       }
     };
-  
+
     checkAuth();
   }, []);
-  
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
@@ -85,15 +85,12 @@ function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-2">
+        <nav className="hidden md:flex items-center space-x-1">
           <Link to="/" className={navLinkClasses("/")}>
             Home
           </Link>
           <Link to="/destinations" className={navLinkClasses("/destinations")}>
-            Destination
-          </Link>
-          <Link to="/about" className={navLinkClasses("/about")}>
-            About
+            Destinations
           </Link>
 
           {/* Services Dropdown */}
@@ -125,9 +122,9 @@ function Header() {
             </button>
             {isServicesOpen && (
               <div className="absolute left-0 mt-1 w-56 bg-white border border-gray-100 rounded-lg shadow-xl z-50 overflow-hidden">
-                {["hotel-booking", "car-rental", "guide"].map((service, idx) => (
+                {["hotel-booking", "car-rental", "guide"].map((service) => (
                   <Link
-                    key={idx}
+                    key={service}
                     to={`/services/${service}`}
                     onClick={() => setIsServicesOpen(false)}
                     className={`block px-4 py-3 transition-colors duration-150 ${
@@ -137,8 +134,9 @@ function Header() {
                     }`}
                   >
                     {service
-                      .replace("-", " ")
-                      .replace(/^./, (c) => c.toUpperCase())}
+                      .split("-")
+                      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                      .join(" ")}
                   </Link>
                 ))}
               </div>
@@ -149,103 +147,84 @@ function Header() {
             Blog
           </Link>
           <Link to="/contact" className={navLinkClasses("/contact")}>
-            Contact Us
+            Contact
           </Link>
-
           <Link to="/weather" className={navLinkClasses("/weather")}>
-  Weather
-</Link>
-
- 
-
+            Weather
+          </Link>
         </nav>
-  
+
         {/* User Actions */}
         <div className="hidden md:flex items-center space-x-4">
           {!user ? (
             <>
               <button
                 onClick={() => navigate("/signIn")}
-                className="px-5 py-2 rounded-full font-medium text-amber-600 hover:text-orange-500"
+                className="px-5 py-2 rounded-lg font-medium text-gray-700 hover:text-orange-500 transition-colors"
               >
                 Sign In
               </button>
               <button
                 onClick={() => navigate("/register")}
-                className="px-5 py-2 rounded-full font-medium bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg hover:shadow-xl hover:from-amber-600 hover:to-orange-600"
+                className="px-5 py-2 rounded-lg font-medium bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-lg hover:shadow-xl hover:from-amber-600 hover:to-orange-600 transition-all"
               >
                 Register
               </button>
             </>
           ) : (
             <>
-              {/* ✅ Cart Icon (only for logged-in users) */}
+              {/* Cart Icon */}
               <Link
                 to="/cart"
-                className="relative px-4 py-2 rounded-full font-medium text-gray-700 hover:text-orange-500 flex items-center"
+                className="relative p-2 rounded-full text-gray-700 hover:text-orange-500 transition-colors"
                 title="View Cart"
               >
-                <svg
-                  className="w-6 h-6 mr-1"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.35 6.55A1 1 0 007 21h10a1 1 0 001-1.45L17 13" />
-                </svg>
-                <span className="text-sm">Cart</span>
+                <FaShoppingCart className="w-5 h-5" />
               </Link>
 
-              <button
-                onClick={handleLogout}
-                className="px-5 py-2 rounded-full font-medium text-gray-700 hover:text-orange-500"
-              >
-                Logout
-              </button>
-
+              {/* Profile Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => toggleDropdown(setIsProfileOpen, isProfileOpen)}
-                  className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-100 to-amber-50 flex items-center justify-center text-amber-600 border border-amber-100 hover:border-amber-200"
+                  className="w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 flex items-center justify-center text-white font-medium shadow-sm hover:shadow-md transition-all"
                   aria-label="User profile"
                 >
-                  {user.name?.charAt(0).toUpperCase() || "U"}
+                  {user.name?.charAt(0).toUpperCase() || <FaUser />}
                 </button>
+
                 {isProfileOpen && (
-  <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-100 shadow-xl rounded-lg z-50">
-    <div className="p-4 border-b border-gray-100 bg-gradient-to-r from-amber-50 to-amber-100">
-      <p className="font-bold text-gray-800">
-        {user.name || "User"}
-      </p>
-      <p className="text-sm text-gray-600">{user.email}</p>
-    </div>
-    <div className="p-4">
-      <p className="text-xs text-gray-500 mb-2">ID: {user.id}</p>
-      <p className="text-sm text-gray-700 mb-1">
-        Role:{" "}
-        <span className="font-medium text-amber-600">{user.role}</span>
-      </p>
-    </div>
+                  <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-lg rounded-xl z-50 overflow-hidden">
+                    {/* Profile Header */}
+                    <div className="p-4 bg-gradient-to-r from-amber-500 to-orange-500">
+                      <p className="font-bold text-white truncate">
+                        {user.name || "User"}
+                      </p>
+                      <p className="text-sm text-white/90 truncate">{user.email}</p>
+                    </div>
 
-    {/* ✅ New Button to Card Details */}
-    <button
-      onClick={() => navigate('/user-cards')}
-      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600"
-    >
-      💳 Card Details
-    </button>
+                    {/* Menu Items */}
+                    <div className="py-1">
+                      <button
+                        onClick={() => {
+                          navigate('/user-cards');
+                          setIsProfileOpen(false);
+                        }}
+                        className="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <FaCreditCard className="mr-3 text-gray-500" />
+                        Payment Methods
+                      </button>
 
-    {/* Logout Button */}
-    <button
-      onClick={handleLogout}
-      className="w-full text-left px-4 py-3 text-gray-700 hover:bg-red-50 hover:text-red-600"
-    >
-      Logout
-    </button>
-  </div>
-)}
-
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      >
+                        <FaSignOutAlt className="mr-3 text-gray-500" />
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </>
           )}
@@ -253,29 +232,35 @@ function Header() {
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden text-gray-700 hover:text-orange-500"
+          className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-amber-50 hover:text-orange-500 transition-colors"
           onClick={() => toggleDropdown(setIsMobileMenuOpen, isMobileMenuOpen)}
           aria-label="Toggle menu"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {isMobileMenuOpen ? (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             ) : (
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             )}
           </svg>
         </button>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-white border-t border-gray-100 shadow-lg">
+          <div className="container mx-auto px-4 py-3 space-y-2">
+            <Link
+              to="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block px-4 py-2 rounded-lg font-medium text-gray-700 hover:bg-amber-50 hover:text-orange-500"
+            >
+              Home
+            </Link>
+            {/* Add other mobile menu links similarly */}
+          </div>
+        </div>
+      )}
     </header>
   );
 }

@@ -1,10 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { CartContext } from '../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { FaTrash, FaArrowLeft, FaShoppingBag, FaLock, FaArrowRight, FaPlus, FaMinus, FaExclamationCircle } from 'react-icons/fa';
 
 const CartPage = () => {
   const { cartItems, updateItem, removeItem } = useContext(CartContext);
   const navigate = useNavigate();
+  const [validationError, setValidationError] = useState(null);
 
   const total = cartItems.reduce((sum, item) => {
     const rent = item.rentPerDay ?? item.price ?? 0;
@@ -12,60 +14,115 @@ const CartPage = () => {
     return sum + rent * days;
   }, 0);
 
+  const validateCart = () => {
+    // Check if cart is empty
+    if (cartItems.length === 0) {
+      setValidationError('Your cart is empty. Please add items before proceeding to checkout.');
+      return false;
+    }
+
+    // Validate each item in the cart
+    for (const item of cartItems) {
+      // Check if item has valid price/rent
+      if (!item.price && !item.rentPerDay) {
+        setValidationError(`Invalid pricing for ${item.name}. Please remove and re-add this item.`);
+        return false;
+      }
+
+      // Check if rental days are valid
+      if (item.days <= 0) {
+        setValidationError(`Invalid rental duration for ${item.name}. Please set at least 1 day.`);
+        return false;
+      }
+
+      // Check if item has all required fields
+      if (!item.name || !item.type) {
+        setValidationError(`Incomplete information for ${item.name || 'an item'}. Please remove and re-add this item.`);
+        return false;
+      }
+    }
+
+    setValidationError(null);
+    return true;
+  };
+
+  const handleProceedToPayment = () => {
+    if (validateCart()) {
+      navigate('/card-entry');
+    }
+  };
+
   return (
-    <div className="pt-24 p-4 max-w-7xl mx-auto min-h-screen">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Your Cart</h1>
-          <p className="text-gray-500 mt-2">Review your selected rentals</p>
+    <div className="bg-amber-50 text-gray-800 min-h-screen">
+      {/* Hero Section */}
+      <section className="relative flex items-center justify-center text-center py-24 px-4 bg-gradient-to-r from-amber-400 to-orange-500">
+        <div className="max-w-4xl mx-auto px-4">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-md">
+            Your Rental Cart
+          </h1>
+          <p className="text-xl md:text-2xl text-amber-100 max-w-3xl mx-auto mb-8">
+            Review your selected items before checkout
+          </p>
         </div>
-        {cartItems.length > 0 && (
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-amber-700 transition-all"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L7.414 9H15a1 1 0 110 2H7.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd" />
-            </svg>
-            Continue Shopping
-          </button>
-        )}
-      </div>
+      </section>
 
-      {/* Empty State */}
-      {cartItems.length === 0 ? (
-        <div className="text-center py-16 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl border border-gray-200">
-          <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center bg-gray-200 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
+      {/* Main Content */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center mb-8">
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center text-amber-700 hover:text-amber-900 transition-colors"
+            >
+              <FaArrowLeft className="mr-2" /> Continue Shopping
+            </button>
+
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+              Cart Summary
+            </h2>
           </div>
-          <h3 className="mt-4 text-xl font-medium text-gray-800">Your cart is empty</h3>
-          <p className="mt-2 text-gray-500">Add items to get started with your rental</p>
-          <button
-            onClick={() => navigate('/')}
-            className="mt-6 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all"
-          >
-            Browse Rentals
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Cart Items List */}
-          <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="p-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">Your Items ({cartItems.length})</h2>
-            </div>
-            <div className="divide-y divide-gray-200">
-              {cartItems.map((item) => {
-                const rent = item.rentPerDay ?? item.price ?? 0;
-                const days = item.days ?? 1;
-                const subtotal = rent * days;
 
-                return (
-                  <div key={item.id} className="p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex flex-col sm:flex-row gap-4">
+          {/* Validation Error Message */}
+          {validationError && (
+            <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded">
+              <div className="flex items-center">
+                <FaExclamationCircle className="text-red-500 mr-3" />
+                <div>
+                  <p className="text-red-700 font-medium">{validationError}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {cartItems.length === 0 ? (
+            <div className="text-center py-16 bg-white rounded-xl border border-amber-200">
+              <div className="w-24 h-24 mx-auto mb-6 flex items-center justify-center bg-amber-100 rounded-full">
+                <FaShoppingBag className="text-3xl text-amber-600" />
+              </div>
+              <h3 className="mt-4 text-xl font-medium text-amber-800">Your cart is empty</h3>
+              <p className="mt-2 text-amber-600">Add items to get started with your rental</p>
+              <button
+                onClick={() => navigate('/')}
+                className="mt-6 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 transition-all"
+              >
+                Browse Rentals
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Cart Items List */}
+              <div className="lg:col-span-2 space-y-4">
+                {cartItems.map((item) => {
+                  const rent = item.rentPerDay ?? item.price ?? 0;
+                  const days = item.days ?? 1;
+                  const subtotal = rent * days;
+                  const hasError = (!item.price && !item.rentPerDay) || item.days <= 0 || !item.name || !item.type;
+
+                  return (
+                    <div
+                      key={item.id}
+                      className={`border ${hasError ? 'border-red-300 bg-red-50' : 'border-amber-200'} p-6 rounded-xl bg-white hover:shadow-md transition-shadow flex flex-col sm:flex-row gap-6`}
+                    >
                       {item.image && (
                         <div className="flex-shrink-0 w-full sm:w-32 h-32 rounded-lg overflow-hidden">
                           <img
@@ -75,116 +132,126 @@ const CartPage = () => {
                           />
                         </div>
                       )}
-                      <div className="flex-1">
+
+                      <div className="flex-grow">
                         <div className="flex justify-between items-start">
                           <div>
-                            <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-                            <p className="text-sm text-gray-500">{item.type}</p>
+                            <h3 className="text-xl font-bold text-amber-900 mb-1">{item.name || 'Unnamed Item'}</h3>
+                            <p className="text-amber-600">{item.type || 'No type specified'}</p>
+                            {hasError && (
+                              <p className="text-sm text-red-600 mt-1 flex items-center">
+                                <FaExclamationCircle className="mr-1" /> This item needs attention
+                              </p>
+                            )}
                           </div>
                           <button
                             onClick={() => removeItem(item.id)}
-                            className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                            className="text-red-500 hover:text-red-700 transition-colors p-1"
+                            title="Remove Item"
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                              <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
-                            </svg>
+                            <FaTrash className="text-xl" />
                           </button>
                         </div>
 
                         <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                          <div className="flex items-center bg-gray-100 rounded-full px-3 py-1 w-fit">
+                          <div className={`flex items-center ${item.days <= 0 ? 'bg-red-100' : 'bg-amber-100'} rounded-full px-3 py-1 w-fit`}>
                             <button
                               onClick={() => updateItem(item.id, days - 1)}
                               disabled={days <= 1}
-                              className={`p-1 ${days <= 1 ? 'text-gray-400 cursor-not-allowed' : 'text-blue-600 hover:text-blue-800'}`}
+                              className={`p-1 ${days <= 1 ? 'text-gray-400 cursor-not-allowed' : 'text-amber-700 hover:text-amber-900'}`}
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M5 10a1 1 0 011-1h8a1 1 0 110 2H6a1 1 0 01-1-1z" clipRule="evenodd" />
-                              </svg>
+                              <FaMinus className="h-4 w-4" />
                             </button>
-                            <span className="mx-2 font-medium">{days} days</span>
+                            <span className={`mx-3 font-medium ${item.days <= 0 ? 'text-red-700' : ''}`}>
+                              {days} Day{days > 1 ? 's' : ''}
+                            </span>
                             <button
                               onClick={() => updateItem(item.id, days + 1)}
-                              className="p-1 text-blue-600 hover:text-blue-800"
+                              className="p-1 text-amber-700 hover:text-amber-900"
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-                              </svg>
+                              <FaPlus className="h-4 w-4" />
                             </button>
                           </div>
 
                           <div className="text-right">
-                            <p className="text-sm text-gray-500">Rs {rent} per day</p>
-                            <p className="text-lg font-semibold text-gray-900">Rs {subtotal.toFixed(2)}</p>
+                            <p className="text-sm text-amber-600">
+                              Rs.{rent > 0 ? rent : <span className="text-red-600">Invalid price</span>} per day
+                            </p>
+                            <p className="text-lg font-bold text-amber-900">
+                              Rs.{subtotal > 0 ? subtotal.toFixed(2) : <span className="text-red-600">Invalid total</span>}
+                            </p>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+                  );
+                })}
+              </div>
 
-          {/* Order Summary */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 h-fit sticky top-4">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Order Summary</h2>
+              {/* Order Summary */}
+              <div className="lg:col-span-1">
+                <div className="border border-amber-200 p-6 rounded-xl bg-white sticky top-4">
+                  <h2 className="text-xl font-bold text-amber-900 mb-6">Order Summary</h2>
 
-            <div className="space-y-4 mb-6">
-              {cartItems.map((item) => {
-                const rent = item.rentPerDay ?? item.price ?? 0;
-                const days = item.days ?? 1;
-                const subtotal = rent * days;
+                  <div className="space-y-3 mb-6 max-h-64 overflow-y-auto pr-2">
+                    {cartItems.map((item) => {
+                      const rent = item.rentPerDay ?? item.price ?? 0;
+                      const days = item.days ?? 1;
+                      const subtotal = rent * days;
 
-                return (
-                  <div key={item.id} className="flex justify-between items-center">
-                    <div className="flex items-center gap-3">
-                      {item.image && (
-                        <div className="flex-shrink-0 w-12 h-12 rounded-md overflow-hidden">
-                          <img
-                            className="w-full h-full object-cover"
-                            src={item.image}
-                            alt={item.name}
-                          />
+                      return (
+                        <div key={item.id} className="flex justify-between items-center">
+                          <div className="flex items-center gap-3">
+                            {item.image && (
+                              <div className="flex-shrink-0 w-12 h-12 rounded-md overflow-hidden border border-amber-200">
+                                <img
+                                  className="w-full h-full object-cover"
+                                  src={item.image}
+                                  alt={item.name}
+                                />
+                              </div>
+                            )}
+                            <div>
+                              <p className="text-sm font-medium text-amber-800 line-clamp-1">{item.name}</p>
+                              <p className="text-xs text-amber-600">{days} Day{days > 1 ? 's' : ''}</p>
+                            </div>
+                          </div>
+                          <p className="text-sm font-medium">Rs.{subtotal.toFixed(2)}</p>
                         </div>
-                      )}
-                      <div>
-                        <p className="text-sm font-medium text-gray-900 line-clamp-1">{item.name}</p>
-                        <p className="text-xs text-gray-500">{days} day{days > 1 ? 's' : ''}</p>
-                      </div>
-                    </div>
-                    <p className="text-sm font-medium">Rs {subtotal.toFixed(2)}</p>
+                      );
+                    })}
                   </div>
-                );
-              })}
-            </div>
 
-            <div className="border-t border-gray-200 pt-4 mb-6">
-              <div className="flex justify-between items-center">
-                <span className="text-base font-medium text-gray-700">Subtotal</span>
-                <span className="text-base font-medium">Rs {total.toFixed(2)}</span>
+                  <div className="border-t border-amber-200 pt-4 mb-6">
+                    <div className="flex justify-between items-center">
+                      <span className="text-base font-medium text-amber-800">Total</span>
+                      <span className="text-lg font-bold text-amber-900">Rs.{total.toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleProceedToPayment}
+                    disabled={validationError !== null}
+                    className={`w-full py-3 px-6 text-white rounded-lg font-medium shadow transition-all flex items-center justify-center gap-2 ${
+                      validationError
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600'
+                    }`}
+                  >
+                    Proceed to Payment
+                    <FaArrowRight />
+                  </button>
+
+                  <div className="mt-4 flex items-center justify-center gap-2 text-sm text-amber-600">
+                    <FaLock className="text-amber-500" />
+                    Secure payment processing
+                  </div>
+                </div>
               </div>
             </div>
-
-            <button
-              onClick={() => navigate('/card-entry')}
-              className="w-full py-3 px-6 bg-gradient-to-r from-amber-500 to-orange-600 text-white rounded-lg font-medium shadow-md hover:from-amber-600 hover:to-amber-700 transition-all flex items-center justify-center gap-2"
-            >
-              Proceed to Payment
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
-
-            <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-500">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              Secure payment processing
-            </div>
-          </div>
+          )}
         </div>
-      )}
+      </section>
     </div>
   );
 };
